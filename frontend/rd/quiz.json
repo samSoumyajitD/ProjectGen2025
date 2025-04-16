@@ -1,0 +1,458 @@
+{
+    "Week 1": [
+        {
+            "question_number": 1,
+            "question_text": "1. What is an array in programming?",
+            "options": {
+                "A": "Option missing",
+                "B": "A collection of variables that can be accessed individually",
+                "C": "A single variable that can hold multiple values",
+                "D": "A function that performs a specific task"
+            },
+            "correct_answer": "B"
+        },
+        {
+            "question_number": 2,
+            "question_text": "2. Which of the following is not a basic algorithm?",
+            "options": {
+                "A": "Option missing",
+                "B": "Searching",
+                "C": "Sorting",
+                "D": "Addition"
+            },
+            "correct_answer": "C"
+        },
+        {
+            "question_number": 3,
+            "question_text": "3. What does time complexity measure in algorithms?",
+            "options": {
+                "A": "Option missing",
+                "B": "The space required by an algorithm",
+                "C": "The number of operations performed by an algorithm",
+                "D": "The accuracy of an algorithm"
+            },
+            "correct_answer": "B"
+        },
+        {
+            "question_number": 4,
+            "question_text": "4. Which of the following is the time complexity of a linear search algorithm in the worst case?",
+            "options": {
+                "A": "Option missing",
+                "B": "O(1)",
+                "C": "O(log n)",
+                "D": "O(n)"
+            },
+            "correct_answer": "C"
+        },
+        {
+            "question_number": 5,
+            "question_text": "5. Which of the following is the time complexity of a binary search algorithm in the worst case?",
+            "options": {
+                "A": "Option missing",
+                "B": "O(1)",
+                "C": "O(log n)",
+                "D": "O(n)"
+            },
+            "correct_answer": "B"
+        }
+    ],
+    "Week 2": [
+        {
+            "question_number": 1,
+            "question_text": "1. What is a linked list?",
+            "options": {
+                "A": "A data structure that stores elements in a linear fashion, with each element pointing to the next one.",
+                "B": "A data structure that stores elements in a last-in, first-out (LIFO) order.",
+                "C": "A data structure that stores elements in a first-in, first-out (FIFO) order.",
+                "D": "A data structure that stores elements in a tree-like structure."
+            },
+            "correct_answer": "A"
+        },
+        {
+            "question_number": 2,
+            "question_text": "2. What is the difference between a stack and a queue?",
+            "options": {
+                "A": "A stack follows a first-in, first-out (FIFO) order, while a queue follows a last-in, first-out (LIFO) order.",
+                "B": "A stack follows a last-in, first-out (LIFO) order, while a queue follows a first-in, first-out (FIFO) order.",
+                "C": "A stack stores elements in a tree-like structure, while a queue stores elements in a linear fashion.",
+                "D": "A stack has a fixed size, while a queue can grow or shrink dynamically."
+            },
+            "correct_answer": "B"
+        },
+        {
+            "question_number": 3,
+            "question_text": "3. What is a common operation performed on a stack?",
+            "options": {
+                "A": "Inserting an element at the beginning of the stack.",
+                "B": "Inserting an element at the end of the stack.",
+                "C": "Removing an element from the beginning of the stack.",
+                "D": "Removing an element from the end of the stack."
+            },
+            "correct_answer": "D"
+        },
+        {
+            "question_number": 4,
+            "question_text": "4. What is a common operation performed on a queue?",
+            "options": {
+                "A": "Inserting an element at the beginning of the queue.",
+                "B": "Inserting an element at the end of the queue.",
+                "C": "Removing an element from the beginning of the queue.",
+                "D": "Removing an element from the end of the queue."
+            },
+            "correct_answer": "B"
+        },
+        {
+            "question_number": 5,
+            "question_text": "5. Which of the following is NOT a use case for a queue?",
+            "options": {
+                "A": "Breadth-first search in a graph.",
+                "B": "Depth-first search in a graph.",
+                "C": "Implementing a print spooler.",
+                "D": "Implementing a web server."
+            },
+            "correct_answer": "B"
+        }
+    ],
+    "Week 3": [
+        {
+            "question_number": 1,
+            "question_text": "1. What is the order of tree traversal for a pre-order traversal?",
+            "options": {
+                "A": "Left-Root-Right",
+                "B": "Root-Left-Right",
+                "C": "Root-Right-Left",
+                "D": "Visit-Left-Right"
+            },
+            "correct_answer": "B"
+        },
+        {
+            "question_number": 2,
+            "question_text": "2. What is the purpose of using a binary search tree?",
+            "options": {
+                "A": "To store data in a non-sorted manner",
+                "B": "To search for data more efficiently",
+                "C": "To insert data in a specific order",
+                "D": "To maintain the order of insertion"
+            },
+            "correct_answer": "B"
+        },
+        {
+            "question_number": 3,
+            "question_text": "3. Which of the following is not a type of tree traversal?",
+            "options": {
+                "A": "In-order",
+                "B": "Pre-order",
+                "C": "Post-order",
+                "D": "Level-order"
+            },
+            "correct_answer": "D"
+        },
+        {
+            "question_number": 4,
+            "question_text": "4. What is the time complexity of searching for a node in a balanced binary search tree?",
+            "options": {
+                "A": "O(n)",
+                "B": "O(log n)",
+                "C": "O(n log n)",
+                "D": "O(1)"
+            },
+            "correct_answer": "B"
+        },
+        {
+            "question_number": 5,
+            "question_text": "5. What is the maximum number of children a node can have in a binary tree?",
+            "options": {
+                "A": "1",
+                "B": "2",
+                "C": "3",
+                "D": "Unlimited"
+            },
+            "correct_answer": "B"
+        }
+    ],
+    "Week 4": [
+        {
+            "question_number": 1,
+            "question_text": "1. What is the name of the algorithm used to find the shortest path between two nodes in a weighted graph?",
+            "options": {
+                "A": "Option missing",
+                "B": "Depth-First Search",
+                "C": "Breadth-First Search",
+                "D": "Dijkstra's Algorithm"
+            },
+            "correct_answer": "C"
+        },
+        {
+            "question_number": 2,
+            "question_text": "2. Which of the following statements is true about Dijkstra's Algorithm?",
+            "options": {
+                "A": "Option missing",
+                "B": "It works only with directed graphs",
+                "C": "It works only with undirected graphs",
+                "D": "It does not work with graphs containing negative edge weights"
+            },
+            "correct_answer": "C"
+        },
+        {
+            "question_number": 3,
+            "question_text": "3. What is the time complexity of Dijkstra's Algorithm when implemented using an array-based priority queue?",
+            "options": {
+                "A": "Option missing",
+                "B": "O(n^2)",
+                "C": "O(n log n)",
+                "D": "O(m log n)"
+            },
+            "correct_answer": "A"
+        },
+        {
+            "question_number": 4,
+            "question_text": "4. Which of the following algorithms is used to find the shortest path from a single source node to all other nodes in a weighted graph?",
+            "options": {
+                "A": "Option missing",
+                "B": "Depth-First Search",
+                "C": "Breadth-First Search",
+                "D": "Dijkstra's Algorithm"
+            },
+            "correct_answer": "D"
+        },
+        {
+            "question_number": 5,
+            "question_text": "5. Which of the following statements is true about the Bellman-Ford Algorithm?",
+            "options": {
+                "A": "Option missing",
+                "B": "It can handle graphs with negative edge weights",
+                "C": "It can handle graphs with negative cycles",
+                "D": "It works only with directed graphs"
+            },
+            "correct_answer": "A"
+        }
+    ],
+    "Week 5": [
+        {
+            "question_number": 1,
+            "question_text": "1. What is the main difference between Memoization and Tabulation in Dynamic Programming?",
+            "options": {
+                "A": "Option missing",
+                "B": "A) Memoization uses a table to store the results of function calls, while Tabulation uses a recursive approach.",
+                "C": "B) Memoization uses a recursive approach, while Tabulation uses a table to store the results of function calls.",
+                "D": "C) Memoization and Tabulation are the same thing."
+            },
+            "correct_answer": "B"
+        },
+        {
+            "question_number": 2,
+            "question_text": "2. Which of the following is an example of a problem that can be solved using Memoization?",
+            "options": {
+                "A": "Option missing",
+                "B": "A) Fibonacci sequence",
+                "C": "B) Tower of Hanoi",
+                "D": "C) Shortest path in a graph"
+            },
+            "correct_answer": "A"
+        },
+        {
+            "question_number": 3,
+            "question_text": "3. Which of the following is an example of a problem that can be solved using Tabulation?",
+            "options": {
+                "A": "Option missing",
+                "B": "A) Fibonacci sequence",
+                "C": "B) Tower of Hanoi",
+                "D": "C) Shortest path in a graph"
+            },
+            "correct_answer": "C"
+        },
+        {
+            "question_number": 4,
+            "question_text": "4. Which of the following is a disadvantage of Memoization over Tabulation?",
+            "options": {
+                "A": "Option missing",
+                "B": "A) Memoization uses more memory than Tabulation",
+                "C": "B) Memoization is slower than Tabulation",
+                "D": "C) Memoization is less flexible than Tabulation"
+            },
+            "correct_answer": "A"
+        },
+        {
+            "question_number": 5,
+            "question_text": "5. Which of the following is a disadvantage of Tabulation over Memoization?",
+            "options": {
+                "A": "Option missing",
+                "B": "A) Tabulation uses more memory than Memoization",
+                "C": "B) Tabulation is slower than Memoization",
+                "D": "C) Tabulation is less flexible than Memoization"
+            },
+            "correct_answer": "B"
+        }
+    ],
+    "Week 6": [
+        {
+            "question_number": 1,
+            "question_text": "1. What is a Greedy Algorithm?",
+            "options": {
+                "A": "A) An algorithm that always makes the locally optimal choice at each stage",
+                "B": "B) An algorithm that makes random choices at each stage",
+                "C": "C) An algorithm that always makes the globally optimal choice at each stage",
+                "D": "D) An algorithm that never makes the same choice twice"
+            },
+            "correct_answer": "A"
+        },
+        {
+            "question_number": 2,
+            "question_text": "2. What is Huffman Coding used for?",
+            "options": {
+                "A": "A) Sorting a list of numbers",
+                "B": "B) Compressing data",
+                "C": "C) Finding the shortest path in a graph",
+                "D": "D) Solving the Traveling Salesman Problem"
+            },
+            "correct_answer": "B"
+        },
+        {
+            "question_number": 3,
+            "question_text": "3. What is the Activity Selection Problem?",
+            "options": {
+                "A": "A) A problem of selecting a subset of activities to be performed such that no two activities overlap",
+                "B": "B) A problem of sorting a list of numbers",
+                "C": "C) A problem of finding the shortest path in a graph",
+                "D": "D) A problem of compressing data"
+            },
+            "correct_answer": "A"
+        },
+        {
+            "question_number": 4,
+            "question_text": "4. What is the Greedy Choice Property of the Activity Selection Problem?",
+            "options": {
+                "A": "A) The locally optimal choice at each stage leads to a globally optimal solution",
+                "B": "B) The globally optimal choice at each stage leads to a locally optimal solution",
+                "C": "C) The locally optimal choice at each stage leads to a locally optimal solution",
+                "D": "D) The globally optimal choice at each stage leads to a locally optimal solution"
+            },
+            "correct_answer": "A"
+        },
+        {
+            "question_number": 5,
+            "question_text": "5. What is the optimal solution for the following activities: (1,4), (2,5), (3,6), (4,7), (5,8)",
+            "options": {
+                "A": "A) (1,4), (3,6), (5,8)",
+                "B": "B) (2,5), (4,7)",
+                "C": "C) (1,4), (2,5), (4,7)",
+                "D": "D) (1,4), (2,5), (3,6), (5,8)"
+            },
+            "correct_answer": "C"
+        }
+    ],
+    "Week 7": [
+        {
+            "question_number": 1,
+            "question_text": "1. What is backtracking in computer science?",
+            "options": {
+                "A": "An algorithmic technique for solving problems by exploring all possible solutions",
+                "B": "A data structure used for storing web pages",
+                "C": "A programming paradigm for concurrent computation",
+                "D": "A type of sorting algorithm"
+            },
+            "correct_answer": "A"
+        },
+        {
+            "question_number": 2,
+            "question_text": "2. Which of the following is a famous problem that can be solved using backtracking?",
+            "options": {
+                "A": "The traveling salesman problem",
+                "B": "The shortest path problem",
+                "C": "The N-Queens problem",
+                "D": "The maximum flow problem"
+            },
+            "correct_answer": "C"
+        },
+        {
+            "question_number": 3,
+            "question_text": "3. How many queens can be placed on an NxN chessboard such that no two queens threaten each other?",
+            "options": {
+                "A": "N",
+                "B": "N-1",
+                "C": "N+1",
+                "D": "2N"
+            },
+            "correct_answer": "A"
+        },
+        {
+            "question_number": 4,
+            "question_text": "4. Which of the following is a constraint satisfaction problem that can be solved using backtracking?",
+            "options": {
+                "A": "The N-Queens problem",
+                "B": "The Sudoku problem",
+                "C": "The knapsack problem",
+                "D": "The minimum spanning tree problem"
+            },
+            "correct_answer": "B"
+        },
+        {
+            "question_number": 5,
+            "question_text": "5. What is the goal of the Sudoku problem?",
+            "options": {
+                "A": "To find the shortest path between two points",
+                "B": "To place numbers in a 9x9 grid such that each row, column, and 3x3 subgrid contains all of the digits from 1 to 9",
+                "C": "To sort a list of numbers in ascending order",
+                "D": "To find the maximum flow in a network"
+            },
+            "correct_answer": "B"
+        }
+    ],
+    "Week 8": [
+        {
+            "question_number": 1,
+            "question_text": "1. Which of the following data structures is a probabilistic data structure that offers approximate set membership queries?",
+            "options": {
+                "A": "Option missing",
+                "B": "Hash table",
+                "C": "Bloom filter",
+                "D": "Trie"
+            },
+            "correct_answer": "B"
+        },
+        {
+            "question_number": 2,
+            "question_text": "2. Which of the following algorithms is used for finding the shortest path between two nodes in a graph?",
+            "options": {
+                "A": "Option missing",
+                "B": "Depth-first search",
+                "C": "Breadth-first search",
+                "D": "Dijkstra's algorithm"
+            },
+            "correct_answer": "C"
+        },
+        {
+            "question_number": 3,
+            "question_text": "3. Which of the following is a design pattern used for building scalable and high-performance web applications?",
+            "options": {
+                "A": "Option missing",
+                "B": "Singleton pattern",
+                "C": "Factory pattern",
+                "D": "Observer pattern"
+            },
+            "correct_answer": "D"
+        },
+        {
+            "question_number": 4,
+            "question_text": "4. Which of the following data structures is a tree-like structure that allows for fast retrieval of data based on a key?",
+            "options": {
+                "A": "Option missing",
+                "B": "Hash table",
+                "C": "B-tree",
+                "D": "Trie"
+            },
+            "correct_answer": "B"
+        },
+        {
+            "question_number": 5,
+            "question_text": "5. Which of the following algorithms is used for sorting an array of elements in ascending order?",
+            "options": {
+                "A": "Option missing",
+                "B": "Merge sort",
+                "C": "Quick sort",
+                "D": "Heap sort"
+            },
+            "correct_answer": "A"
+        }
+    ]
+}

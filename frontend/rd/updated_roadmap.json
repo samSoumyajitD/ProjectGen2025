@@ -1,0 +1,174 @@
+{
+    "feedback": "Detailed Feedback:",
+    "accuracy": "40%",
+    "analysis": {
+      "question_1": "Incorrect - Needs improvement in understanding arrays in programming.",
+      "question_2": "Correct - Good grasp of basic algorithms.",
+      "question_3": "Correct - Understanding of time complexity is strong.",
+      "question_4": "Incorrect - Needs better understanding of linear search time complexity.",
+      "question_5": "Incorrect - Needs improvement in binary search time complexity."
+    },
+    "updated_roadmap": [
+      {
+        "week": 1,
+        "goals": [
+          "Learn Arrays",
+          "Practice Basic Algorithms",
+          "Introduction to Data Structures"
+        ],
+        "topics": [
+          "Arrays",
+          "Basic Algorithms",
+          "Time Complexity",
+          "Introduction to Data Structures"
+        ],
+        "suggested_yt_videos": [
+          "https://www.youtube.com/results?search_query=Arrays+tutorial",
+          "https://www.youtube.com/results?search_query=Basic+Algorithms+tutorial",
+          "https://www.youtube.com/results?search_query=Time+Complexity+tutorial",
+          "https://www.youtube.com/results?search_query=Introduction+to+Data+Structures+tutorial"
+        ]
+      },
+      {
+        "week": 2,
+        "goals": [
+          "Master Linked Lists",
+          "Implement Stacks and Queues",
+          "Understand Time Complexity"
+        ],
+        "topics": [
+          "Linked Lists",
+          "Stacks",
+          "Queues",
+          "Time Complexity"
+        ],
+        "suggested_yt_videos": [
+          "https://www.youtube.com/results?search_query=Linked+Lists+tutorial",
+          "https://www.youtube.com/results?search_query=Stacks+tutorial",
+          "https://www.youtube.com/results?search_query=Queues+tutorial",
+          "https://www.youtube.com/results?search_query=Time+Complexity+tutorial"
+        ]
+      },
+      {
+        "week": 3,
+        "goals": [
+          "Learn Trees",
+          "Practice Tree Traversal",
+          "Understand Time Complexity"
+        ],
+        "topics": [
+          "Trees",
+          "Tree Traversal",
+          "Binary Search Trees",
+          "Time Complexity"
+        ],
+        "suggested_yt_videos": [
+          "https://www.youtube.com/results?search_query=Trees+tutorial",
+          "https://www.youtube.com/results?search_query=Tree+Traversal+tutorial",
+          "https://www.youtube.com/results?search_query=Binary+Search+Trees+tutorial",
+          "https://www.youtube.com/results?search_query=Time+Complexity+tutorial"
+        ]
+      },
+      {
+        "week": 4,
+        "goals": [
+          "Master Graphs",
+          "Implement Graph Algorithms",
+          "Understand Time Complexity"
+        ],
+        "topics": [
+          "Graphs",
+          "Graph Algorithms",
+          "Shortest Paths",
+          "Time Complexity"
+        ],
+        "suggested_yt_videos": [
+          "https://www.youtube.com/results?search_query=Graphs+tutorial",
+          "https://www.youtube.com/results?search_query=Graph+Algorithms+tutorial",
+          "https://www.youtube.com/results?search_query=Shortest+Paths+tutorial",
+          "https://www.youtube.com/results?search_query=Time+Complexity+tutorial"
+        ]
+      },
+      {
+        "week": 5,
+        "goals": [
+          "Learn Dynamic Programming",
+          "Practice DP Problems",
+          "Understand Time Complexity"
+        ],
+        "topics": [
+          "Dynamic Programming",
+          "Memoization",
+          "Tabulation",
+          "Time Complexity"
+        ],
+        "suggested_yt_videos": [
+          "https://www.youtube.com/results?search_query=Dynamic+Programming+tutorial",
+          "https://www.youtube.com/results?search_query=Memoization+tutorial",
+          "https://www.youtube.com/results?search_query=Tabulation+tutorial",
+          "https://www.youtube.com/results?search_query=Time+Complexity+tutorial"
+        ]
+      },
+      {
+        "week": 6,
+        "goals": [
+          "Master Greedy Algorithms",
+          "Implement Greedy Algorithm Problems",
+          "Understand Time Complexity"
+        ],
+        "topics": [
+          "Greedy Algorithms",
+          "Huffman Coding",
+          "Activity Selection",
+          "Time Complexity"
+        ],
+        "suggested_yt_videos": [
+          "https://www.youtube.com/results?search_query=Greedy+Algorithms+tutorial",
+          "https://www.youtube.com/results?search_query=Huffman+Coding+tutorial",
+          "https://www.youtube.com/results?search_query=Activity+Selection+tutorial",
+          "https://www.youtube.com/results?search_query=Time+Complexity+tutorial"
+        ]
+      },
+      {
+        "week": 7,
+        "goals": [
+          "Learn Backtracking",
+          "Practice Backtracking Problems",
+          "Understand Time Complexity"
+        ],
+        "topics": [
+          "Backtracking",
+          "N-Queens",
+          "Sudoku",
+          "Time Complexity"
+        ],
+        "suggested_yt_videos": [
+          "https://www.youtube.com/results?search_query=Backtracking+tutorial",
+          "https://www.youtube.com/results?search_query=N-Queens+tutorial",
+          "https://www.youtube.com/results?search_query=Sudoku+tutorial",
+          "https://www.youtube.com/results?search_query=Time+Complexity+tutorial"
+        ]
+      },
+      {
+        "week": 8,
+        "goals": [
+          "Practice Advanced Problems",
+          "Review All Topics",
+          "Understand Time Complexity"
+        ],
+        "topics": [
+          "Advanced Data Structures",
+          "Advanced Algorithms",
+          "System Design",
+          "Time Complexity"
+        ],
+        "suggested_yt_videos": [
+          "https://www.youtube.com/results?search_query=Advanced+Data+Structures+tutorial",
+          "https://www.youtube.com/results?search_query=Advanced+Algorithms+tutorial",
+          "https://www.youtube.com/results?search_query=System+Design+tutorial",
+          "https://www.youtube.com/results?search_query=Time+Complexity+tutorial"
+        ]
+      }
+    ]
+  }
+  

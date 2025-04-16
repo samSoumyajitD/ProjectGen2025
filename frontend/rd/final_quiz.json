@@ -1,0 +1,112 @@
+[
+    {
+        "question_number": 1,
+        "question_text": "1. What is the name of the data structure that stores elements in a doubly-linked list format, allowing for efficient insertion and deletion of nodes?",
+        "options": {
+            "A": "Arrays",
+            "B": "Linked Lists",
+            "C": "Queues",
+            "D": "Stacks"
+        },
+        "correct_answer": "B"
+    },
+    {
+        "question_number": 2,
+        "question_text": "2. Which of the following is a tree traversal method that visits nodes in a depth-first order, using a stack data structure?",
+        "options": {
+            "A": "Breadth-first search",
+            "B": "Depth-first search (DFS) using recursion",
+            "C": "Depth-first search (DFS) using a stack",
+            "D": "Level-order traversal"
+        },
+        "correct_answer": "C"
+    },
+    {
+        "question_number": 3,
+        "question_text": "3. In the context of dynamic programming, what is the purpose of memoization?",
+        "options": {
+            "A": "Storing intermediate results to avoid redundant calculations",
+            "B": "Sorting an array in descending order",
+            "C": "Converting a recursive algorithm to an iterative one",
+            "D": "Implementing a binary search tree"
+        },
+        "correct_answer": "A"
+    },
+    {
+        "question_number": 4,
+        "question_text": "4. Which of the following is a graph algorithm that finds the shortest path between two nodes in a weighted graph?",
+        "options": {
+            "A": "Dijkstra's algorithm",
+            "B": "Breadth-first search",
+            "C": "Depth-first search",
+            "D": "Bellman-Ford algorithm"
+        },
+        "correct_answer": "A"
+    },
+    {
+        "question_number": 5,
+        "question_text": "5. What is the time complexity of searching for an element in an unsorted array of size n using a linear search algorithm?",
+        "options": {
+            "A": "O(log n)",
+            "B": "O(n)",
+            "C": "O(n log n)",
+            "D": "O(n^2)"
+        },
+        "correct_answer": "B"
+    },
+    {
+        "question_number": 6,
+        "question_text": "6. Which of the following is a binary tree traversal method that visits nodes in a left-to-right order, using a stack data structure?",
+        "options": {
+            "A": "Pre-order traversal",
+            "B": "In-order traversal",
+            "C": "Post-order traversal",
+            "D": "Level-order traversal"
+        },
+        "correct_answer": "B"
+    },
+    {
+        "question_number": 7,
+        "question_text": "7. What is the name of the algorithm that finds the longest common subsequence between two strings?",
+        "options": {
+            "A": "Dynamic programming",
+            "B": "Greedy algorithms",
+            "C": "Tabulation",
+            "D": "Memoization"
+        },
+        "correct_answer": "A"
+    },
+    {
+        "question_number": 8,
+        "question_text": "8. Which of the following is a data structure that stores elements in a last-in, first-out (LIFO) order?",
+        "options": {
+            "A": "Array",
+            "B": "Queue",
+            "C": "Stack",
+            "D": "Linked List"
+        },
+        "correct_answer": "C"
+    },
+    {
+        "question_number": 9,
+        "question_text": "9. What is the time complexity of inserting an element at the beginning of a linked list?",
+        "options": {
+            "A": "O(1)",
+            "B": "O(log n)",
+            "C": "O(n)",
+            "D": "O(n log n)"
+        },
+        "correct_answer": "A"
+    },
+    {
+        "question_number": 10,
+        "question_text": "10. Which of the following is a graph algorithm that finds the minimum spanning tree of a connected, undirected graph?",
+        "options": {
+            "A": "Prim's algorithm",
+            "B": "Kruskal's algorithm",
+            "C": "Depth-first search",
+            "D": "Breadth-first search"
+        },
+        "correct_answer": "A"
+    }
+]
