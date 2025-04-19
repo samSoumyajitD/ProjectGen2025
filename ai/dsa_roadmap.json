@@ -1,0 +1,199 @@
+[
+  {
+    "week": 1,
+    "goals": [
+      "Set up C++ Development Environment",
+      "Understand Basic Syntax and Data Types",
+      "Learn about Input/Output Operations"
+    ],
+    "topics": [
+      "Introduction to C++",
+      "Variables and Data Types",
+      "Operators",
+      "Basic I/O"
+    ],
+    "suggested_yt_videos": [
+      "https://www.youtube.com/watch?v=vLnPwxZdW4Y",
+      "https://www.youtube.com/watch?v=Rub-jvjIJpI"
+    ]
+  },
+  {
+    "week": 2,
+    "goals": [
+      "Understand control structures in C++",
+      "Practice loops and conditional statements"
+    ],
+    "topics": [
+      "If-else statements",
+      "Switch statements",
+      "For loops",
+      "While loops"
+    ],
+    "suggested_yt_videos": [
+      "https://www.youtube.com/watch?v=1_t-MwWDSz4",
+      "https://www.youtube.com/watch?v=ApXQmSMEEws"
+    ]
+  },
+  {
+    "week": 3,
+    "goals": [
+      "Learn about functions",
+      "Understand function parameters and return values"
+    ],
+    "topics": [
+      "Function declaration and definition",
+      "Function parameters and arguments",
+      "Return types",
+      "Function overloading"
+    ],
+    "suggested_yt_videos": [
+      "https://www.youtube.com/watch?v=iAXESqY-NqI",
+      "https://www.youtube.com/watch?v=95GkTjV-KtU"
+    ]
+  },
+  {
+    "week": 4,
+    "goals": [
+      "Introduction to Arrays",
+      "Learn about basic array operations",
+      "Practice array manipulation"
+    ],
+    "topics": [
+      "Array declaration and initialization",
+      "Accessing array elements",
+      "Basic array algorithms (sum, average, min, max)"
+    ],
+    "suggested_yt_videos": [
+      "https://www.youtube.com/watch?v=10WvP9NwN6k",
+      "https://www.youtube.com/watch?v=JaG0Vq4QQt4"
+    ]
+  },
+  {
+    "week": 5,
+    "goals": [
+      "Understand pointers and dynamic memory allocation",
+      "Practice pointer arithmetic"
+    ],
+    "topics": [
+      "Pointer basics",
+      "Dynamic memory allocation (new, delete)",
+      "Pointers and arrays"
+    ],
+    "suggested_yt_videos": [
+      "https://www.youtube.com/watch?v=zuegQmM1JxE",
+      "https://www.youtube.com/watch?v=EC9wPd9uhYY"
+    ]
+  },
+  {
+    "week": 6,
+    "goals": [
+      "Learn about classes and objects",
+      "Understand the basics of OOP"
+    ],
+    "topics": [
+      "Class definition",
+      "Object creation",
+      "Member functions",
+      "Data encapsulation"
+    ],
+    "suggested_yt_videos": [
+      "https://www.youtube.com/watch?v=wN0x9e5VEvw",
+      "https://www.youtube.com/watch?v=CPgXvd25-zA"
+    ]
+  },
+  {
+    "week": 7,
+    "goals": [
+      "Learn about Linked Lists",
+      "Implement basic linked list operations"
+    ],
+    "topics": [
+      "Singly Linked List",
+      "Doubly Linked List",
+      "Basic Operations (Insertion, Deletion, Traversal)"
+    ],
+    "suggested_yt_videos": [
+      "https://www.youtube.com/watch?v=njAu_t9qW-A",
+      "https://www.youtube.com/watch?v=YQesjNzH9rM"
+    ]
+  },
+  {
+    "week": 8,
+    "goals": [
+      "Understand Stacks and Queues",
+      "Implement stack and queue using arrays or linked lists"
+    ],
+    "topics": [
+      "Stack (LIFO)",
+      "Queue (FIFO)",
+      "Stack and Queue Applications"
+    ],
+    "suggested_yt_videos": [
+      "https://www.youtube.com/watch?v=F1F2imiOJfk",
+      "https://www.youtube.com/watch?v=wjI1WNcIntg"
+    ]
+  },
+  {
+    "week": 9,
+    "goals": [
+      "Introduction to Trees",
+      "Learn about Binary Trees and Binary Search Trees"
+    ],
+    "topics": [
+      "Binary Tree Basics",
+      "Binary Search Tree (BST)",
+      "Tree Traversal (Inorder, Preorder, Postorder)"
+    ],
+    "suggested_yt_videos": [
+      "https://www.youtube.com/watch?v=qH6yxkw0v-s",
+      "https://www.youtube.com/watch?v=gcULXE7ViZw"
+    ]
+  },
+  {
+    "week": 10,
+    "goals": [
+      "Learn about Sorting Algorithms",
+      "Implement Bubble Sort, Selection Sort, and Insertion Sort"
+    ],
+    "topics": [
+      "Bubble Sort",
+      "Selection Sort",
+      "Insertion Sort"
+    ],
+    "suggested_yt_videos": [
+      "https://www.youtube.com/watch?v=nmhjrI-aW5o",
+      "https://www.youtube.com/watch?v=Ns4TPTC8whw"
+    ]
+  },
+  {
+    "week": 11,
+    "goals": [
+      "Understand Merge Sort and Quick Sort",
+      "Implement Merge Sort and Quick Sort"
+    ],
+    "topics": [
+      "Merge Sort",
+      "Quick Sort"
+    ],
+    "suggested_yt_videos": [
+      "https://www.youtube.com/watch?v=es2i_2K6zX4",
+      "https://www.youtube.com/watch?v=y_G9BkAm6B8"
+    ]
+  },
+  {
+    "week": 12,
+    "goals": [
+      "Introduction to Hash Tables",
+      "Understand Hash Functions and Collision Resolution"
+    ],
+    "topics": [
+      "Hash Table Basics",
+      "Hash Functions",
+      "Collision Resolution Techniques"
+    ],
+    "suggested_yt_videos": [
+      "https://www.youtube.com/watch?v=shs0KM3wKyw",
+      "https://www.youtube.com/watch?v=LPwIz9-R8E4"
+    ]
+  }
+]

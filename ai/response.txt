@@ -1,0 +1,16 @@
+1. Supervised Learning: Regression and Classification
+2. Model Evaluation Metrics
+3. Cross-Validation Techniques
+4. Hyperparameter Tuning
+5. Unsupervised Learning: Clustering Algorithms
+6. Dimensionality Reduction Techniques
+7. Feature Engineering
+8. Model Selection
+9. Ensemble Methods: Bagging and Boosting
+10. Time Series Analysis
+11. Deep Learning Fundamentals
+12. Neural Network Architectures
+13. Convolutional Neural Networks (CNNs)
+14. Recurrent Neural Networks (RNNs)
+15. Transfer Learning
+16. Project Development and Deployment
