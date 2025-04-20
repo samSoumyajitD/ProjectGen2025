@@ -10,8 +10,9 @@ from langchain.chains.retrieval import create_retrieval_chain
 from langchain.chains.combine_documents.stuff import create_stuff_documents_chain
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers.string import StrOutputParser
-from agent import get_agent_instance, get_structuring_agent_instance
-
+from agent import get_agent_instance
+from instructions_and_roles import role_structuring, role_text_info, instruction_text_info, instruction_structuring
+from utils.yt_script import get_video_list
 import json
 import traceback
 import re
@@ -66,17 +67,26 @@ def generate_roadmap_api(user_id=None):
         # """
 
         # Create personalized prompt and generate roadmap
-        agent = get_agent_instance()
-        structuring_agent = get_structuring_agent_instance()
-        response = agent.run(personalized_prompt)
-        json_response = structuring_agent.run(response.content)
-        roadmap_json = parse_roadmap_response(json_response.content)
+        info_agent = get_agent_instance(role_text_info, instruction_text_info)
+        structuring_agent = get_agent_instance(role_structuring, instruction_structuring)
+        response = info_agent.run(personalized_prompt)
+        topic_list = list(response.content.strip('\n').strip().strip('`').split('\n'))
+        video_list = get_video_list(topic_list)
         
-        if roadmap_json:
-            # save_roadmap_to_mongo(user_id, roadmap_json, user_inputs["goal"])
-            return jsonify({"roadmap": roadmap_json}), 200
-        else:
-            return jsonify({"error": "No JSON found in LLM response"}), 500
+        content_for_restructuring = response.content + "\n\n\n" + "video_list"
+        restructured_content = structuring_agent.run(content_for_restructuring)
+        parsed_response = parse_roadmap_response(restructured_content.content)
+
+        return parsed_response
+        print("response : ", response);
+        # json_response = structuring_agent.run(response.content)
+        # roadmap_json = parse_roadmap_response(json_response.content)
+        
+        # if roadmap_json:
+        #     # save_roadmap_to_mongo(user_id, roadmap_json, user_inputs["goal"])
+        #     return jsonify({"roadmap": roadmap_json}), 200
+        # else:
+        #     return jsonify({"error": "No JSON found in LLM response"}), 500
 
     except Exception as err:
         traceback.print_exc()
@@ -173,4 +183,8 @@ if __name__ == '__main__':
     #     print(json_output)
     # else:
     #     print("NO json found!")
-    app.run(debug=True)
+    response = generate_roadmap_api()
+    parser = StrOutputParser()
+    output = parser.invoke(response.content)
+    # print(output)
+    # app.run(debug=True)
