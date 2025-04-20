@@ -2,8 +2,8 @@ role_structuring = "You are an expert at structuring information into JSON forma
 
 instruction_structuring = """
         #PROVIDED INFO/CONTENT:
-        - You will be provided a list of topics and a list of youtube videos with their titles and URLS.
-        - Some user requirements in the following format: 
+        - You will be provided some user requirements, a list of topics and a list of youtube videos with their titles and URLS.
+        - User requirements in the following format: 
           1. **Learning Goal**.
           2. **Time Commitment**
           3. **Preferred Learning Mode**
@@ -37,6 +37,8 @@ instruction_structuring = """
             },
             ...
         ]
+
+        The deadline of the user must be respected at all costs. Group several topics in one week if required but DO NOT go beyond the deadline of the user.  
 
         IMPORTANT:
         **DO NOT alter any content (text or video) in the structuring process**

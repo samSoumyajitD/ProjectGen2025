@@ -45,11 +45,11 @@ GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 def generate_roadmap_api(user_id=None):
     try:
         # Fetch user data from MongoDB using user_id
-        user_inputs = get_mongo_data(user_id)
+        # user_inputs = get_mongo_data(user_id)
         
         # Check if the user data was found
-        if not user_inputs:
-            return jsonify({"error": "User not found"}), 404
+        # if not user_inputs:
+        #     return jsonify({"error": "User not found"}), 404
 
         
         
