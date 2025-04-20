@@ -45,46 +45,42 @@ GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 def generate_roadmap_api(user_id=None):
     try:
         # Fetch user data from MongoDB using user_id
-        # user_inputs = get_mongo_data()  # Pass user_id to get_mongo_data
+        user_inputs = get_mongo_data(user_id)
         
         # Check if the user data was found
-        # if not user_inputs:
-        #     return jsonify({"error": "User not found"}), 404
+        if not user_inputs:
+            return jsonify({"error": "User not found"}), 404
 
         
         
-        # user_inputs = get_mongo_data(user_id)
-        #TODO:revert back after testing
+        
+        # Create personalized prompt
         personalized_prompt = create_personalized_prompt()
-        # personalized_prompt="""
-        # - Learning Goal: DSA in C++
-        # - Time Commitment: 3 hrs per week
-        # - Preferred Learning Mode: Tutorials and Videos
-        # - Current Skill Level: beginner
-        # - Deadline: No deadline but I want to become a SDE fast.
+        
 
 
-        # """
-
-        # Create personalized prompt and generate roadmap
+        #Instantiating agents
         info_agent = get_agent_instance(role_text_info, instruction_text_info)
         structuring_agent = get_agent_instance(role_structuring, instruction_structuring)
+        
+        #fetching videos related to the topics
         response = info_agent.run(personalized_prompt)
         topic_list = list(response.content.strip('\n').strip().strip('`').split('\n'))
         video_list = get_video_list(topic_list)
         
+        #restructuring content to required json.
         content_for_restructuring = response.content + "\n\n\n" + video_list
         restructured_content = structuring_agent.run(content_for_restructuring)
         parsed_response = parse_roadmap_response(restructured_content.content)
 
-        return parsed_response
-        print("response : ", response);
+        # return parsed_response #TESTING
+        # print("response : ", response);
         # json_response = structuring_agent.run(response.content)
         # roadmap_json = parse_roadmap_response(json_response.content)
         
+        return jsonify({"roadmap": parsed_response}), 200
         # if roadmap_json:
         #     # save_roadmap_to_mongo(user_id, roadmap_json, user_inputs["goal"])
-        #     return jsonify({"roadmap": roadmap_json}), 200
         # else:
         #     return jsonify({"error": "No JSON found in LLM response"}), 500
 
@@ -183,9 +179,9 @@ if __name__ == '__main__':
     #     print(json_output)
     # else:
     #     print("NO json found!")
-    response = generate_roadmap_api()
-    print("response: ",response)
+    # response = generate_roadmap_api()
+    # print("response: ",response)
     # parser = StrOutputParser()
     # output = parser.invoke(response.content)
     # print(output)
-    # app.run(debug=True)
+    app.run(debug=True)
