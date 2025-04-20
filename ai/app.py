@@ -73,7 +73,7 @@ def generate_roadmap_api(user_id=None):
         topic_list = list(response.content.strip('\n').strip().strip('`').split('\n'))
         video_list = get_video_list(topic_list)
         
-        content_for_restructuring = response.content + "\n\n\n" + "video_list"
+        content_for_restructuring = response.content + "\n\n\n" + video_list
         restructured_content = structuring_agent.run(content_for_restructuring)
         parsed_response = parse_roadmap_response(restructured_content.content)
 
@@ -184,7 +184,8 @@ if __name__ == '__main__':
     # else:
     #     print("NO json found!")
     response = generate_roadmap_api()
-    parser = StrOutputParser()
-    output = parser.invoke(response.content)
+    print("response: ",response)
+    # parser = StrOutputParser()
+    # output = parser.invoke(response.content)
     # print(output)
     # app.run(debug=True)

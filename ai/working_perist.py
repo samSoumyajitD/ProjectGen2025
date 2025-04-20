@@ -127,10 +127,10 @@ def create_combine_docs_template():
 
 def create_personalized_prompt(user_inputs=None):
     user_prompt = """
-        - Learning Goal: Machine Learning 
+        - Learning Goal: NextJs 
         - Time Commitment: 3 hrs per week
         - Preferred Learning Mode: Tutorials and Videos
-        - Current Skill Level: Intermediate
+        - Current Skill Level: Beginner
         - Deadline: I want to learn it in about 12 weeks.
     """
     return user_prompt

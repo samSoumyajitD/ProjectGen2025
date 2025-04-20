@@ -40,6 +40,9 @@ instruction_structuring = """
 
         IMPORTANT:
         **DO NOT alter any content (text or video) in the structuring process**
+        
+        **Only use the Urls provided in the prompt as the suggested videos.**DO NOT hardcode nor generate new urls on your own.** 
+        
         REPEAT: This JSON structure MUST be FOLLOWED WITHOUT FAIL. Provide the response as a JSON embedded in the response string. Wrap the JSON in triple backticks.
         """
 
@@ -80,4 +83,5 @@ instruction_text_info = """
 
                 - **INCLUDE ALL TOPICS WHICH ARE REQUIRED**.The number of topics can surpass the number of weeks.
 
+                - Make sure that the number of topics don't exceed 30. 
                 Strictly follow these guidelines to provide a structured and **personalized** learning experience."""
