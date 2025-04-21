@@ -3,6 +3,7 @@
 import json
 import os
 import re
+from bson import ObjectId
 from pymongo import MongoClient
 from datetime import datetime
 from langchain_community.document_loaders import PyPDFLoader
@@ -16,7 +17,9 @@ from langchain_groq import ChatGroq
 from pathlib import Path
 from langchain_google_genai import ChatGoogleGenerativeAI
 from phi.agent import Agent
+
 import traceback
+
 # Initialize Flask app
 from dotenv import load_dotenv
 import os
@@ -35,14 +38,14 @@ FAISS_INDEX_PATH = "workingpro_faiss_index"  # Directory for FAISS index
 PDF_PATH = "Working_Professional_Data.pdf"  # Path to your data source
 EMBEDDING_MODEL = "sentence-transformers/all-mpnet-base-v2"
 
-def get_mongo_data():
+def get_mongo_data(goal_id, user_id):
     """Fetch the latest goal data from MongoDB"""
     client = MongoClient(MONGO_URI)
-    db = client["Amdoc"]
+    db = client["test"]
     collection = db["goals"]
     
     # Fetch the latest inserted document
-    latest_goal = collection.find_one(sort=[("createdAt", -1)])
+    latest_goal = collection.find_one({"_id":goal_id, "userId":user_id}, sort=[("createdAt", -1)])
 
     if not latest_goal:
         raise ValueError("No goal data found in MongoDB.")
@@ -126,12 +129,12 @@ def create_combine_docs_template():
     return prompt
 
 def create_personalized_prompt(user_inputs=None):
-    user_prompt = """
-        - Learning Goal: NextJs 
-        - Time Commitment: 3 hrs per week
-        - Preferred Learning Mode: Tutorials and Videos
-        - Current Skill Level: Beginner
-        - Deadline: I want to learn it in about 12 weeks.
+    user_prompt = f"""
+        - Learning Goal: {user_inputs["goal"]}  
+        - Time Commitment: {user_inputs["time_per_week"]}
+        - Preferred Learning Mode: {user_inputs["learning_mode"]}
+        - Current Skill Level: {user_inputs["skill_level"]}
+        - Deadline: {user_inputs["deadline"]} weeks
     """
     return user_prompt
     
@@ -226,119 +229,7 @@ if __name__ == "__main__":
     # prompt = create_personalized_prompt(user_info)
 
     # print(prompt.format_messages()[0])
-    string = """
-            ```json
-            [
-            {
-                "week": 1,
-                "goals": [
-                "Grasp the core concepts of MCP",
-                "Understand its purpose",
-                "Understand how it facilitates communication between LLMs and external data sources"
-                ],
-                "topics": [
-                "Introduction to Model Context Protocol (MCP): What it is, why it was created, and its benefits.",
-                "Key Concepts: Context Injection, Data Source Integration, Security, and Standardization",
-                "MCP vs. APIs: Understand the difference between MCP and traditional APIs."
-                ],
-                "suggested_yt_videos": [
-                "https://www.youtube.com/watch?v=1Pf2rW5FsqQ",
-                "https://www.youtube.com/watch?v=Xs9AwE2lyHg",
-                "https://www.youtube.com/watch?v=MC2BwMGFRx4"
-                ]
-            },
-            {
-                "week": 2,
-                "goals": [
-                "Grasp the core concepts of MCP",
-                "Understand its purpose",
-                "Understand how it facilitates communication between LLMs and external data sources"
-                ],
-                "topics": [
-                "Introduction to Model Context Protocol (MCP): What it is, why it was created, and its benefits.",
-                "Key Concepts: Context Injection, Data Source Integration, Security, and Standardization",
-                "MCP vs. APIs: Understand the difference between MCP and traditional APIs."
-                ],
-                "suggested_yt_videos": [
-                "https://www.youtube.com/watch?v=1Pf2rW5FsqQ",
-                "https://www.youtube.com/watch?v=Xs9AwE2lyHg",
-                "https://www.youtube.com/watch?v=MC2BwMGFRx4"
-                ]
-            },
-            {
-                "week": 3,
-                "goals": [
-                "Explore the technical aspects of MCP",
-                "Learn how to configure and run an MCP server using different languages (e.g., Python, C#).",
-                "Learn how to protect your MCP server and data."
-                ],
-                "topics": [
-                "Setting up an MCP Server: Learn how to configure and run an MCP server using different languages (e.g., Python, C#).",
-                "Integrating Data Sources: Connect your MCP server to various data sources like databases, APIs, and files.",
-                "Security Considerations: Implement security measures to protect your MCP server and data."
-                ],
-                "suggested_yt_videos": [
-                "https://www.youtube.com/watch?v=LYfr7qusVSs",
-                "https://www.youtube.com/watch?v=eur8dUO9mvE",
-                "https://www.youtube.com/watch?v=HyzlYwjoXOQ"
-                ]
-            },
-            {
-                "week": 4,
-                "goals": [
-                "Explore the technical aspects of MCP",
-                "Learn how to configure and run an MCP server using different languages (e.g., Python, C#).",
-                "Learn how to protect your MCP server and data."
-                ],
-                "topics": [
-                "Setting up an MCP Server: Learn how to configure and run an MCP server using different languages (e.g., Python, C#).",
-                "Integrating Data Sources: Connect your MCP server to various data sources like databases, APIs, and files.",
-                "Security Considerations: Implement security measures to protect your MCP server and data."
-                ],
-                "suggested_yt_videos": [
-                "https://www.youtube.com/watch?v=LYfr7qusVSs",
-                "https://www.youtube.com/watch?v=eur8dUO9mvE",
-                "https://www.youtube.com/watch?v=HyzlYwjoXOQ"
-                ]
-            },
-            {
-                "week": 5,
-                "goals": [
-                "Apply MCP in real-world scenarios",
-                "Focus on agentic AI and complex data integrations."
-                ],
-                "topics": [
-                "MCP for Agentic AI: Use MCP to build AI agents that can access tools and data autonomously.",
-                "Advanced Data Integration: Explore integrating MCP with more complex data sources and APIs.",
-                "Real-world Use Cases: Study examples of how MCP is used in different industries."
-                ],
-                "suggested_yt_videos": [
-                "https://www.youtube.com/watch?v=VChRPFUzJGA",
-                "https://www.youtube.com/watch?v=eD0uBLr-eP8"
-                ]
-            },
-            {
-                "week": 6,
-                "goals": [
-                "Apply MCP in real-world scenarios",
-                "Focus on agentic AI and complex data integrations."
-                ],
-                "topics": [
-                "MCP for Agentic AI: Use MCP to build AI agents that can access tools and data autonomously.",
-                "Advanced Data Integration: Explore integrating MCP with more complex data sources and APIs.",
-                "Real-world Use Cases: Study examples of how MCP is used in different industries."
-                ],
-                "suggested_yt_videos": [
-                "https://www.youtube.com/watch?v=VChRPFUzJGA",
-                "https://www.youtube.com/watch?v=eD0uBLr-eP8"
-                ]
-            }
-            ]
-            ```
-    """
-    # match = re.search(r"```json", string, re.DOTALL)
-    # print(match)
-    # print(string[0],string[1], string[2])
-    parsed_response = parse_roadmap_response(string)
-
-    print(parsed_response)
+    user_inputs = get_mongo_data(ObjectId("67a1fae0cd1963827d5c292e"), ObjectId("6805f9af2328eebef7cffd50"))
+    # print("user_inputs: ",user_inputs, type(user_inputs))
+    print(user_inputs["goal"])
+    pass

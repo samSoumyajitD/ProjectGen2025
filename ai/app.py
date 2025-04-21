@@ -41,21 +41,24 @@ quiz_collection = db["KnowledgeAssessment"]
 # Get API Key from .env
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 
-@app.route('/generate-roadmap/<user_id>', methods=['POST'])
-def generate_roadmap_api(user_id=None):
+@app.route('/generate-roadmap/<user_id>/<goal_id>', methods=['POST'])
+def generate_roadmap_api(user_id:str, goal_id:str):
+    
     try:
+        user_id = ObjectId(user_id)
+        goal_id = ObjectId(goal_id)
         # Fetch user data from MongoDB using user_id
-        # user_inputs = get_mongo_data(user_id)
+        user_inputs = get_mongo_data(goal_id, user_id)
         
         # Check if the user data was found
-        # if not user_inputs:
-        #     return jsonify({"error": "User not found"}), 404
+        if not user_inputs:
+            return jsonify({"error": "User not found"}), 404
 
         
         
         
         # Create personalized prompt
-        personalized_prompt = create_personalized_prompt()
+        personalized_prompt = create_personalized_prompt(user_inputs) #for testing didnt add user_inputs 
         
 
 
