@@ -2,7 +2,7 @@ from flask import Flask, jsonify, request,make_response
 from pymongo import MongoClient
 from flask_cors import CORS
 from langchain.chains import RetrievalQA
-from working_perist import parse_roadmap_response, create_combine_docs_template, get_mongo_data, get_vectorstore, setup_ai_model, create_personalized_prompt, generate_roadmap, save_roadmap_to_mongo
+from working_perist import get_roadmap_data, parse_roadmap_response, create_combine_docs_template, get_mongo_data, get_vectorstore, setup_ai_model, create_personalized_prompt, generate_roadmap, save_roadmap_to_mongo
 from bson import ObjectId
 from generateQuiz import generate_quiz, parse_quiz_to_json, store_quiz_in_db, roadmap_collection, parse_roadmap
 from generateQuiz import setup_ai_model, parse_roadmap, generate_quiz, parse_quiz_to_json, store_quiz_in_db
@@ -76,14 +76,14 @@ def generate_roadmap_api(user_id:str, goal_id:str):
         restructured_content = structuring_agent.run(content_for_restructuring)
         parsed_response = parse_roadmap_response(restructured_content.content)
 
+        if parsed_response:
+            save_roadmap_to_mongo(user_id, goal_id, parsed_response, user_inputs["goal"])
         # return parsed_response #TESTING
         # print("response : ", response);
         # json_response = structuring_agent.run(response.content)
         # roadmap_json = parse_roadmap_response(json_response.content)
         
         return jsonify({"roadmap": parsed_response}), 200
-        # if roadmap_json:
-        #     # save_roadmap_to_mongo(user_id, roadmap_json, user_inputs["goal"])
         # else:
         #     return jsonify({"error": "No JSON found in LLM response"}), 500
 
@@ -92,6 +92,15 @@ def generate_roadmap_api(user_id:str, goal_id:str):
         print("err : ",err)
         return jsonify({"message":"Something went wrong!Please try again later."}),500
 
+@app.route('/get-roadmap/<user_id>/<goal_id>', methods=["GET"])
+def fetch_roadmap_data(user_id:str, goal_id:str):
+    try:
+        roadmap_data = get_roadmap_data(user_id, goal_id)
+        
+        return jsonify({"roadmap":roadmap_data}), 200
+    except Exception as err:
+        print("Error fetching roadmap data: ", err)
+        return jsonify({"error":"Something went wrong :("}), 500
 def object_id_to_str(obj):
     if isinstance(obj, ObjectId):
         return str(obj)
@@ -170,8 +179,10 @@ def get_quiz():
 if __name__ == '__main__':
     # app.run(debug=True)
     # parser = StrOutputParser()
-    # output = generate_roadmap_api()
-    # parsed_output = parser.invoke(output.content)
+    # output = generate_roadmap_api("6805f9af2328eebef7cffd50", "67a1fae0cd1963827d5c292e")
+    # with open("roadmap_json.json","r") as f:
+    #     f.write(output)
+    # # parsed_output = parser.invoke(output.content)
     
     # match = re.search(r'```json', parsed_output, re.DOTALL)
     # print(parsed_output)
@@ -187,4 +198,6 @@ if __name__ == '__main__':
     # parser = StrOutputParser()
     # output = parser.invoke(response.content)
     # print(output)
+    # save_roadmap_to_mongo("6805f9af2328eebef7cffd50", , user_inputs["goal"])
+
     app.run(debug=True)
