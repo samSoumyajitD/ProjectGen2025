@@ -5,7 +5,7 @@ import os
 import re
 from bson import ObjectId
 from pymongo import MongoClient
-from datetime import datetime
+from datetime import datetime, timezone
 from langchain_community.document_loaders import PyPDFLoader
 from langchain.text_splitter import CharacterTextSplitter
 from langchain_community.embeddings import HuggingFaceEmbeddings
@@ -60,6 +60,50 @@ def get_mongo_data(goal_id, user_id):
     }
 
     return user_inputs
+
+def save_roadmap_to_mongo(user_id, goal_id, roadmap, goal):
+    """Save or update the generated roadmap in MongoDB under the 'Roadmap' collection."""
+    client = MongoClient(MONGO_URI)
+    db = client["test"]
+    collection = db["roadmaps"]
+
+    # Check if a roadmap already exists for the user and goal
+    existing_roadmap = collection.find_one({"userID": user_id, "goal": goal})
+
+    roadmap_data = {
+        "userId": user_id,
+        "goalId": goal_id,
+        "roadmap": roadmap,
+        "goal": goal,
+        "timestamp": datetime.now(timezone.utc)  # Store timestamp for tracking
+    }
+
+    if existing_roadmap:
+        # Update the existing roadmap
+        collection.update_one(
+            {"_id": existing_roadmap["_id"]},  # Match the existing document by its _id
+            {"$set": roadmap_data}  # Update the roadmap data
+        )
+        print(f"\n✅ Roadmap updated successfully for userID: {user_id}")
+    else:
+        # Insert a new roadmap document if no existing one is found
+        collection.insert_one(roadmap_data)
+        print(f"\n✅ Roadmap saved successfully in MongoDB for userID: {user_id}")
+
+def get_roadmap_data(user_id, goal_id):
+    try:
+        user_id = ObjectId(user_id)
+        goal_id = ObjectId(goal_id)
+        client = MongoClient(MONGO_URI)
+        db = client["test"]
+        collection = db["roadmaps"]
+
+        roadmap = collection.find_one({"userId":user_id, "goalId":goal_id})
+        return roadmap.get("roadmap")
+    except Exception as err:
+        print("Error at calling mongo methods to fetch roadmap",err)
+
+
 def create_agent(): 
     pass
 def get_vectorstore():
@@ -176,34 +220,6 @@ def save_roadmap(output, file_type="txt"):
 
     print(f"\n📄 Roadmap saved as {filename}")
 
-def save_roadmap_to_mongo(user_id, roadmap, goal):
-    """Save or update the generated roadmap in MongoDB under the 'Roadmap' collection."""
-    client = MongoClient(MONGO_URI)
-    db = client["Amdoc"]
-    collection = db["Roadmap"]
-
-    # Check if a roadmap already exists for the user and goal
-    existing_roadmap = collection.find_one({"userID": user_id, "goal": goal})
-
-    roadmap_data = {
-        "userID": user_id,
-        "roadmap": roadmap,
-        "goal": goal,
-        "timestamp": datetime.utcnow()  # Store timestamp for tracking
-    }
-
-    if existing_roadmap:
-        # Update the existing roadmap
-        collection.update_one(
-            {"_id": existing_roadmap["_id"]},  # Match the existing document by its _id
-            {"$set": roadmap_data}  # Update the roadmap data
-        )
-        print(f"\n✅ Roadmap updated successfully for userID: {user_id}")
-    else:
-        # Insert a new roadmap document if no existing one is found
-        collection.insert_one(roadmap_data)
-        print(f"\n✅ Roadmap saved successfully in MongoDB for userID: {user_id}")
-
 def generate_and_save_roadmap(api_key, user_id):
     # Fetch the latest goal data from MongoDB
     user_inputs = get_mongo_data()
@@ -229,7 +245,9 @@ if __name__ == "__main__":
     # prompt = create_personalized_prompt(user_info)
 
     # print(prompt.format_messages()[0])
-    user_inputs = get_mongo_data(ObjectId("67a1fae0cd1963827d5c292e"), ObjectId("6805f9af2328eebef7cffd50"))
-    # print("user_inputs: ",user_inputs, type(user_inputs))
-    print(user_inputs["goal"])
+    # user_inputs = get_mongo_data(ObjectId("67a1fae0cd1963827d5c292e"), ObjectId("6805f9af2328eebef7cffd50"))
+    # # print("user_inputs: ",user_inputs, type(user_inputs))
+    # print(user_inputs["goal"])
+    roadmap = get_roadmap_data("6805f9af2328eebef7cffd50", "67a1fae0cd1963827d5c292e")
+    print("roadmap: ", roadmap)
     pass
