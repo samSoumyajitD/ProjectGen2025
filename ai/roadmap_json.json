@@ -1,0 +1,247 @@
+[
+    {
+      "week": 1,
+      "goals": [
+        "Learn C++ basics",
+        "Practice basic syntax"
+      ],
+      "topics": [
+        "Variables",
+        "Data Types",
+        "Operators"
+      ],
+      "suggested_yt_videos": [
+        "https://www.youtube.com/results?search_query=Variables+tutorial",
+        "https://www.youtube.com/results?search_query=Data+Types+tutorial",
+        "https://www.youtube.com/results?search_query=Operators+tutorial"
+      ],
+      "suggested_nptel_certifications": [
+        {
+          "Course Name": "Programming in Modern C++",
+          "Institute": "IIT Kharagpur",
+          "Duration": "12 Weeks",
+          "NPTEL URL": "https://nptel.ac.in/courses/106105234"
+        },
+        {
+          "Course Name": "Multirate DSP",
+          "Institute": "IIT Madras",
+          "Duration": "12 Weeks",
+          "NPTEL URL": "https://nptel.ac.in/courses/108106136"
+        },
+        {
+          "Course Name": "Compiler Design",
+          "Institute": "IIT Kharagpur",
+          "Duration": "12 Weeks",
+          "NPTEL URL": "https://nptel.ac.in/courses/106105190"
+        },
+        {
+          "Course Name": "Introduction To Haskell Programming",
+          "Institute": "CMI",
+          "Duration": "8 Weeks",
+          "NPTEL URL": "https://nptel.ac.in/courses/106106137"
+        },
+        {
+          "Course Name": "Fundamental Algorithms: Design and Analysis",
+          "Institute": "IIT Kharagpur",
+          "Duration": "4 Weeks",
+          "NPTEL URL": "https://nptel.ac.in/courses/106105157"
+        }
+      ]
+    },
+    {
+      "week": 2,
+      "goals": [
+        "Understand control structures",
+        "Practice loops and conditional statements"
+      ],
+      "topics": [
+        "If-Else Statements",
+        "For Loops",
+        "While Loops"
+      ],
+      "suggested_yt_videos": [
+        "https://www.youtube.com/results?search_query=If-Else+Statements+tutorial",
+        "https://www.youtube.com/results?search_query=For+Loops+tutorial",
+        "https://www.youtube.com/results?search_query=While+Loops+tutorial"
+      ],
+      "suggested_nptel_certifications": [
+        {
+          "Course Name": "Programming in Modern C++",
+          "Institute": "IIT Kharagpur",
+          "Duration": "12 Weeks",
+          "NPTEL URL": "https://nptel.ac.in/courses/106105234"
+        },
+        {
+          "Course Name": "Multirate DSP",
+          "Institute": "IIT Madras",
+          "Duration": "12 Weeks",
+          "NPTEL URL": "https://nptel.ac.in/courses/108106136"
+        },
+        {
+          "Course Name": "Compiler Design",
+          "Institute": "IIT Kharagpur",
+          "Duration": "12 Weeks",
+          "NPTEL URL": "https://nptel.ac.in/courses/106105190"
+        },
+        {
+          "Course Name": "Introduction To Haskell Programming",
+          "Institute": "CMI",
+          "Duration": "8 Weeks",
+          "NPTEL URL": "https://nptel.ac.in/courses/106106137"
+        },
+        {
+          "Course Name": "Fundamental Algorithms: Design and Analysis",
+          "Institute": "IIT Kharagpur",
+          "Duration": "4 Weeks",
+          "NPTEL URL": "https://nptel.ac.in/courses/106105157"
+        }
+      ]
+    },
+    {
+      "week": 3,
+      "goals": [
+        "Learn functions",
+        "Practice function declarations and definitions"
+      ],
+      "topics": [
+        "Function Basics",
+        "Function Parameters",
+        "Return Types"
+      ],
+      "suggested_yt_videos": [
+        "https://www.youtube.com/results?search_query=Function+Basics+tutorial",
+        "https://www.youtube.com/results?search_query=Function+Parameters+tutorial",
+        "https://www.youtube.com/results?search_query=Return+Types+tutorial"
+      ],
+      "suggested_nptel_certifications": [
+        {
+          "Course Name": "Programming in Modern C++",
+          "Institute": "IIT Kharagpur",
+          "Duration": "12 Weeks",
+          "NPTEL URL": "https://nptel.ac.in/courses/106105234"
+        },
+        {
+          "Course Name": "Multirate DSP",
+          "Institute": "IIT Madras",
+          "Duration": "12 Weeks",
+          "NPTEL URL": "https://nptel.ac.in/courses/108106136"
+        },
+        {
+          "Course Name": "Compiler Design",
+          "Institute": "IIT Kharagpur",
+          "Duration": "12 Weeks",
+          "NPTEL URL": "https://nptel.ac.in/courses/106105190"
+        },
+        {
+          "Course Name": "Introduction To Haskell Programming",
+          "Institute": "CMI",
+          "Duration": "8 Weeks",
+          "NPTEL URL": "https://nptel.ac.in/courses/106106137"
+        },
+        {
+          "Course Name": "Fundamental Algorithms: Design and Analysis",
+          "Institute": "IIT Kharagpur",
+          "Duration": "4 Weeks",
+          "NPTEL URL": "https://nptel.ac.in/courses/106105157"
+        }
+      ]
+    },
+    {
+      "week": 4,
+      "goals": [
+        "Understand arrays and vectors",
+        "Practice array and vector operations"
+      ],
+      "topics": [
+        "Arrays",
+        "Vectors",
+        "Array Operations"
+      ],
+      "suggested_yt_videos": [
+        "https://www.youtube.com/results?search_query=Arrays+tutorial",
+        "https://www.youtube.com/results?search_query=Vectors+tutorial",
+        "https://www.youtube.com/results?search_query=Array+Operations+tutorial"
+      ],
+      "suggested_nptel_certifications": [
+        {
+          "Course Name": "Programming in Modern C++",
+          "Institute": "IIT Kharagpur",
+          "Duration": "12 Weeks",
+          "NPTEL URL": "https://nptel.ac.in/courses/106105234"
+        },
+        {
+          "Course Name": "Multirate DSP",
+          "Institute": "IIT Madras",
+          "Duration": "12 Weeks",
+          "NPTEL URL": "https://nptel.ac.in/courses/108106136"
+        },
+        {
+          "Course Name": "Compiler Design",
+          "Institute": "IIT Kharagpur",
+          "Duration": "12 Weeks",
+          "NPTEL URL": "https://nptel.ac.in/courses/106105190"
+        },
+        {
+          "Course Name": "Introduction To Haskell Programming",
+          "Institute": "CMI",
+          "Duration": "8 Weeks",
+          "NPTEL URL": "https://nptel.ac.in/courses/106106137"
+        },
+        {
+          "Course Name": "Fundamental Algorithms: Design and Analysis",
+          "Institute": "IIT Kharagpur",
+          "Duration": "4 Weeks",
+          "NPTEL URL": "https://nptel.ac.in/courses/106105157"
+        }
+      ]
+    },
+    {
+      "week": 5,
+      "goals": [
+        "Learn strings and string operations",
+        "Practice string manipulation"
+      ],
+      "topics": [
+        "Strings",
+        "String Operations",
+        "String Functions"
+      ],
+      "suggested_yt_videos": [
+        "https://www.youtube.com/results?search_query=Strings+tutorial",
+        "https://www.youtube.com/results?search_query=String+Operations+tutorial",
+        "https://www.youtube.com/results?search_query=String+Functions+tutorial"
+      ],
+      "suggested_nptel_certifications": [
+        {
+          "Course Name": "Programming in Modern C++",
+          "Institute": "IIT Kharagpur",
+          "Duration": "12 Weeks",
+          "NPTEL URL": "https://nptel.ac.in/courses/106105234"
+        },
+        {
+          "Course Name": "Multirate DSP",
+          "Institute": "IIT Madras",
+          "Duration": "12 Weeks",
+          "NPTEL URL": "https://nptel.ac.in/courses/108106136"
+        },
+        {
+          "Course Name": "Compiler Design",
+          "Institute": "IIT Kharagpur",
+          "Duration": "12 Weeks",
+          "NPTEL URL": "https://nptel.ac.in/courses/106105190"
+        },
+        {
+          "Course Name": "Introduction To Haskell Programming",
+          "Institute": "CMI",
+          "Duration": "8 Weeks",
+          "NPTEL URL": "https://nptel.ac.in/courses/106106137"
+        },
+        {
+          "Course Name": "Fundamental Algorithms: Design and Analysis",
+          "Institute": "IIT Kharagpur",
+          "Duration": "4 Weeks",
+          "NPTEL URL": "https://nptel.ac.in/courses/106105157"
+        }
+      ]
+    }
+]

@@ -2,7 +2,7 @@ from flask import Flask, jsonify, request, make_response
 from pymongo import MongoClient
 from flask_cors import CORS
 from langchain.chains import RetrievalQA
-from working_perist import get_roadmap_data, parse_json_response, create_combine_docs_template, get_mongo_data, get_vectorstore, setup_ai_model, create_personalized_prompt, generate_roadmap, save_roadmap_to_mongo
+from working_perist import extract_roadmap_topics, get_roadmap_data, parse_json_response, create_combine_docs_template, get_mongo_data, get_vectorstore, setup_ai_model, create_personalized_prompt, generate_roadmap, save_roadmap_to_mongo
 from bson import ObjectId
 from generateQuiz import generate_quiz, parse_quiz_to_json, store_quiz_in_db, roadmap_collection, parse_roadmap
 from generateQuiz import setup_ai_model, parse_roadmap, generate_quiz, parse_quiz_to_json, store_quiz_in_db
@@ -11,7 +11,7 @@ from langchain.chains.combine_documents.stuff import create_stuff_documents_chai
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers.string import StrOutputParser
 from agent import get_agent_instance
-from instructions_and_roles import role_structuring, role_text_info, instruction_text_info, instruction_structuring
+from instructions_and_roles import role_quiz, instructions_quiz, role_structuring, role_text_info, instruction_text_info, instruction_structuring
 from utils.yt_script import get_video_list
 import json
 import traceback
@@ -78,14 +78,10 @@ def generate_roadmap_api(user_id:str, goal_id:str):
 
         if parsed_response:
             save_roadmap_to_mongo(user_id, goal_id, parsed_response, user_inputs["goal"])
-        # return parsed_response #TESTING
-        # print("response : ", response);
-        # json_response = structuring_agent.run(response.content)
-        # roadmap_json = parse_roadmap_response(json_response.content)
+        
         
         return jsonify({"roadmap": parsed_response}), 200
-        # else:
-        #     return jsonify({"error": "No JSON found in LLM response"}), 500
+        
 
     except Exception as err:
         traceback.print_exc()
@@ -129,21 +125,7 @@ def get_goals(user_id):
 
 # MongoDB Connection (redundant if already in generate_quiz.py, but kept for clarity)
 
-def extract_roadmap_topics(roadmap:list[dict], week:int|None) -> list[str]:
-    """
-        Reads the roadmap document and extracts the topics out of it based on the week provided. Returns two lists one for the topics and another for goals and if week is not provided or None then returns a list of all the topics and goals present in that roadmap.
-    """
-    topic_list=[]
-    goal_list=[]
-    if week:
-        topic_list = roadmap[week-1].get("topics")
-        goal_list = roadmap[week-1].get("goals")
-    else:
-        for module in roadmap:
-            topic_list.extend(module.topics)
-            goal_list.extend(module.goals) 
-
-    return topic_list, goal_list   
+  
 
 
 @app.route('/generate-quiz/<user_id>/<goal_id>', methods=['POST'])
@@ -163,6 +145,21 @@ def generate_quiz_endpoint(user_id:str, goal_id:str):
         
         # print("roadmap: ", roadmap_document["roadmap"])
         topic_list, goal_list = extract_roadmap_topics(roadmap_document["roadmap"], week)
+
+        #instantiating agent
+        agent = get_agent_instance(role=role_quiz, instructions = instructions_quiz)
+        
+        quiz_prompt = f"""
+            Topics_list : {topic_list}
+            Goals_list : {goal_list}
+        """
+        
+        response = agent.run(quiz_prompt)
+
+        parsed_response = parse_json_response(response.content)
+
+        return jsonify({"quiz":parsed_response}),200
+
         # print("topic_list: ", topic_list, type(topic_list))
         return jsonify({"topics":topic_list, "goals":goal_list}),200
     except Exception as err:
