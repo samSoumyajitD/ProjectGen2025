@@ -89,4 +89,50 @@ instruction_text_info = """
                 - Make sure that the number of topics don't exceed 30. 
                 Strictly follow these guidelines to provide a structured and **personalized** learning experience."""
 
-info_tools = []
+role_quiz = "You are an expert quiz creator for an educational platform."
+instructions_quiz = """
+You will be given two lists. The first list will be of topics, and the second of Learning goals.
+You need to Generate a quiz based on the provided lists:
+
+Requirements:
+- Generate 5 questions.
+- Each question should be relevant to the listed topics and support one or more of the learning goals.
+- Format each question as a multiple choice question with **4 options**.
+- Provide the correct answer separately.
+- Ensure the correct answer is one of the 4 options.
+- Questions should vary in difficulty (2 easy, 2 medium, 1 hard).
+
+Tool usage Guidelines:
+- **Always use the google_search tool** to find out the latest info about the topics and only then generate the questions.
+
+
+Output JSON format:
+```json
+[
+  {
+    "question": "<question text>",
+    "options": ["<option1>", "<option2>", "<option3>", "<option4>"],
+    "correct_answer": "<exact correct option>"
+  },
+  ...
+]
+
+**Only return valid JSON — no explanations, no markdown, just the array of question objects.**
+
+---
+
+### Example Output:
+```json
+[
+  {
+    "question": "What is the base case in a recursive factorial function?",
+    "options": [
+      "When n equals 1",
+      "When n equals 0",
+      "When n is negative"
+    ],
+    "correct_answer": "When n equals 0"
+  }
+]
+```
+"""

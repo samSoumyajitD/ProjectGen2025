@@ -182,7 +182,7 @@ def create_personalized_prompt(user_inputs=None):
     """
     return user_prompt
     
-def parse_roadmap_response(response)->list|None:
+def parse_json_response(response)->list|None:
     # parser = StrOutputParser()
     # parsed_output = parser.invoke(response)
 
@@ -195,7 +195,22 @@ def parse_roadmap_response(response)->list|None:
         return roadmap_json
     else:
         return None
+    
+def extract_roadmap_topics(roadmap:list[dict], week:int|None) -> list[str]:
+    """
+        Reads the roadmap document and extracts the topics out of it based on the week provided. Returns two lists one for the topics and another for goals and if week is not provided or None then returns a list of all the topics and goals present in that roadmap.
+    """
+    topic_list=[]
+    goal_list=[]
+    if week:
+        topic_list = roadmap[week-1].get("topics")
+        goal_list = roadmap[week-1].get("goals")
+    else:
+        for module in roadmap:
+            topic_list.extend(module.topics)
+            goal_list.extend(module.goals) 
 
+    return topic_list, goal_list 
 def generate_roadmap(retrieval_chain, personalized_prompt, user_goal=None):
     try:
         print("\nGenerating your personalized roadmap...\n")

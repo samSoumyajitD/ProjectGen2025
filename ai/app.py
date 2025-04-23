@@ -2,7 +2,7 @@ from flask import Flask, jsonify, request, make_response
 from pymongo import MongoClient
 from flask_cors import CORS
 from langchain.chains import RetrievalQA
-from working_perist import get_roadmap_data, parse_roadmap_response, create_combine_docs_template, get_mongo_data, get_vectorstore, setup_ai_model, create_personalized_prompt, generate_roadmap, save_roadmap_to_mongo
+from working_perist import get_roadmap_data, parse_json_response, create_combine_docs_template, get_mongo_data, get_vectorstore, setup_ai_model, create_personalized_prompt, generate_roadmap, save_roadmap_to_mongo
 from bson import ObjectId
 from generateQuiz import generate_quiz, parse_quiz_to_json, store_quiz_in_db, roadmap_collection, parse_roadmap
 from generateQuiz import setup_ai_model, parse_roadmap, generate_quiz, parse_quiz_to_json, store_quiz_in_db
@@ -74,7 +74,7 @@ def generate_roadmap_api(user_id:str, goal_id:str):
         #restructuring content to required json.
         content_for_restructuring = response.content + "\n\n\n" + video_list
         restructured_content = structuring_agent.run(content_for_restructuring)
-        parsed_response = parse_roadmap_response(restructured_content.content)
+        parsed_response = parse_json_response(restructured_content.content)
 
         if parsed_response:
             save_roadmap_to_mongo(user_id, goal_id, parsed_response, user_inputs["goal"])
