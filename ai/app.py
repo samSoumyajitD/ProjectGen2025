@@ -137,7 +137,6 @@ def generate_quiz_endpoint(user_id:str, goal_id:str):
         # print("user_id: ", user_id, "goal_id: ", goal_id)
         data = request.get_json()
         week = data.get("week") if data else None
-        final = data.get("final") if data else None
         # print("week : ", week)
         roadmap_document = roadmap_collection.find_one({"userId":user_id, "goalId":goal_id})
         # print(roadmap_document["roadmap"])
@@ -147,12 +146,12 @@ def generate_quiz_endpoint(user_id:str, goal_id:str):
         # print("roadmap: ", roadmap_document["roadmap"])
         topic_list, goal_list = extract_roadmap_topics(roadmap_document["roadmap"], week)
 
-        questions_quantity = 5
-        if final:
-            questions_quantity=10
+        questions_quantity = '5'
+        if not week:
+            questions_quantity="10"
 
         #instantiating agent
-        agent = get_agent_instance(role=role_quiz, instructions = instructions_quiz.format(num_questions="10"))
+        agent = get_agent_instance(role=role_quiz, instructions = instructions_quiz.format(num_questions=questions_quantity))
         
         quiz_prompt = f"""
             Topics_list : {topic_list}
