@@ -130,6 +130,10 @@ def get_goals(user_id):
 
 @app.route('/generate-quiz/<user_id>/<goal_id>', methods=['POST'])
 def generate_quiz_endpoint(user_id:str, goal_id:str):
+    """
+        Provide the field 'week' in the body of the request if the quiz is being generated for a specific week. 
+        For final quiz, simply dont send any body along with the request or an empty body.
+    """
     try:
         
         user_id = ObjectId(user_id)
