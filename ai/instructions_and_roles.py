@@ -60,10 +60,11 @@ instruction_text_info = """
                 5. **Deadline**
                 
                 ### Information Gathering:
-                - **Always** use the **GoogleSearch** tool to find the latest and most up-to-date information about the topic, including best practices, new features, and recent advancements.
+                - **Always** use the **google_search** tool to find the latest and most up-to-date information about the topic, including best practices, new features, and recent advancements.
                 
-                - **Use the retriever_tool** to fetch relevant documents and existing knowledge on the topic. This will provide context from previously gathered materials and also provide an idea on how to help the user learn the topic step by step.
+                - **Use the retriever_similar_docs** to fetch relevant documents and existing knowledge on the topic. This will provide context from previously gathered materials and also provide an idea on how to help the user learn the topic step by step.
 
+                #IMPORTANT: Always use the google_search tool provided to fetch the latest information about the topic.And only then provide the content.
                 
                 ### Response Guidelines:
                 - Ensure that every suggested topic, resource, or milestone aligns with the user’s constraints.
@@ -87,3 +88,5 @@ instruction_text_info = """
 
                 - Make sure that the number of topics don't exceed 30. 
                 Strictly follow these guidelines to provide a structured and **personalized** learning experience."""
+
+info_tools = []

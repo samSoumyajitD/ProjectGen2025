@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request,make_response
+from flask import Flask, jsonify, request, make_response
 from pymongo import MongoClient
 from flask_cors import CORS
 from langchain.chains import RetrievalQA
@@ -33,9 +33,9 @@ MONGO_URI = os.getenv("MONGO_URI")
 
 # MongoDB Client Setup
 client = MongoClient(MONGO_URI)
-db = client["Amdoc"]
+db = client["test"]
 collection = db["goals"]
-roadmap_collection = db["Roadmap"]
+roadmap_collection = db["roadmaps"]
 quiz_collection = db["KnowledgeAssessment"]
 
 # Get API Key from .env
@@ -129,36 +129,68 @@ def get_goals(user_id):
 
 # MongoDB Connection (redundant if already in generate_quiz.py, but kept for clarity)
 
+def extract_roadmap_topics(roadmap:list[dict], week:int|None) -> list[str]:
+    """
+        Reads the roadmap document and extracts the topics out of it based on the week provided. Returns two lists one for the topics and another for goals and if week is not provided or None then returns a list of all the topics and goals present in that roadmap.
+    """
+    topic_list=[]
+    goal_list=[]
+    if week:
+        topic_list = roadmap[week-1].get("topics")
+        goal_list = roadmap[week-1].get("goals")
+    else:
+        for module in roadmap:
+            topic_list.extend(module.topics)
+            goal_list.extend(module.goals) 
 
-@app.route('/generate-quiz', methods=['POST'])
-def generate_quiz_endpoint():
-    # Fetch roadmap from MongoDB
-    roadmap_entry = roadmap_collection.find_one({}, {"userID": 1, "roadmap": 1})
-    if not roadmap_entry:
-        return jsonify({"error": "No roadmap found in MongoDB"}), 404
-    
-    user_id = roadmap_entry["userID"]
-    roadmap_content = roadmap_entry["roadmap"]
+    return topic_list, goal_list   
 
-    # Parse and generate quiz
-    week_dict = parse_roadmap(roadmap_content)
-    if not week_dict:
-        return jsonify({"error": "No valid weekly sections found in roadmap"}), 400
 
-    first_week = next(iter(week_dict))
-    print(f"Generating quiz for {first_week}...")
+@app.route('/generate-quiz/<user_id>/<goal_id>', methods=['POST'])
+def generate_quiz_endpoint(user_id:str, goal_id:str):
+    try:
+        
+        user_id = ObjectId(user_id)
+        goal_id = ObjectId(goal_id)
+        # print("user_id: ", user_id, "goal_id: ", goal_id)
+        data = request.get_json()
+        week = data.get("week") if data else None
+        # print("week : ", week)
+        roadmap_document = roadmap_collection.find_one({"userId":user_id, "goalId":goal_id})
+        # print(roadmap_document["roadmap"])
+        if not roadmap_document :
+            return jsonify({"error": "No roadmap found in MongoDB"}), 404
+        
+        # print("roadmap: ", roadmap_document["roadmap"])
+        topic_list, goal_list = extract_roadmap_topics(roadmap_document["roadmap"], week)
+        # print("topic_list: ", topic_list, type(topic_list))
+        return jsonify({"topics":topic_list, "goals":goal_list}),200
+    except Exception as err:
+        traceback.print_exc()
+        print("Error generating quiz : ", err)
+        return jsonify({"error":"Something went wrong while generating quiz :("}), 500
+    # user_id = roadmap_entry["userID"]
+    # roadmap_content = roadmap_entry["roadmap"]
 
-    # Setup AI model using API key from .env
-    chat_model = setup_ai_model(GROQ_API_KEY )
+    # # Parse and generate quiz
+    # week_dict = roadmap_document
+    # if not week_dict:
+    #     return jsonify({"error": "No valid weekly sections found in roadmap"}), 400
 
-    # Generate quiz
-    quiz_text = generate_quiz(chat_model, first_week, week_dict[first_week])
-    quiz_data = parse_quiz_to_json(quiz_text)
+    # first_week = next(iter(week_dict))
+    # print(f"Generating quiz for {first_week}...")
 
-    # Store quiz in MongoDB
-    store_quiz_in_db(user_id, quiz_data)
+    # # Setup AI model using API key from .env
+    # chat_model = setup_ai_model(GROQ_API_KEY )
 
-    return jsonify({"message": "Quiz generated and stored successfully", "quiz_data": quiz_data}), 200
+    # # Generate quiz
+    # quiz_text = generate_quiz(chat_model, first_week, week_dict[first_week])
+    # quiz_data = parse_quiz_to_json(quiz_text)
+
+    # # Store quiz in MongoDB
+    # store_quiz_in_db(user_id, quiz_data)
+
+    # return jsonify({"message": "Quiz generated and stored successfully", "quiz_data": quiz_data}), 200
 
 @app.route('/get_quiz', methods=['GET'])
 def get_quiz():
