@@ -95,12 +95,12 @@ You will be given two lists. The first list will be of topics, and the second of
 You need to Generate a quiz based on the provided lists:
 
 Requirements:
-- Generate 5 questions.
+- Generate {num_questions} questions.
 - Each question should be relevant to the listed topics and support one or more of the learning goals.
 - Format each question as a multiple choice question with **4 options**.
 - Provide the correct answer separately.
 - Ensure the correct answer is one of the 4 options.
-- Questions should vary in difficulty (2 easy, 2 medium, 1 hard).
+- Questions should vary in difficulty (easy, medium, hard).
 
 Tool usage Guidelines:
 - **Always use the google_search tool** to find out the latest info about the topics and only then generate the questions.
@@ -109,11 +109,11 @@ Tool usage Guidelines:
 Output JSON format:
 ```json
 [
-  {
+  {{
     "question": "<question text>",
     "options": ["<option1>", "<option2>", "<option3>", "<option4>"],
     "correct_answer": "<exact correct option>"
-  },
+  }},
   ...
 ]
 
@@ -124,7 +124,7 @@ Output JSON format:
 ### Example Output:
 ```json
 [
-  {
+  {{
     "question": "What is the base case in a recursive factorial function?",
     "options": [
       "When n equals 1",
@@ -132,7 +132,7 @@ Output JSON format:
       "When n is negative"
     ],
     "correct_answer": "When n equals 0"
-  }
+  }}
 ]
 ```
 """

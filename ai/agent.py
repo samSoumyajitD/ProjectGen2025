@@ -39,7 +39,7 @@ if __name__ == "__main__":
         Goals_list = {goal_list}
     """
     # agent = get_agent_instance(role=role_text_info, instructions = instruction_text_info)
-    agent = get_agent_instance(role = role_quiz, instructions = instructions_quiz)
+    agent = get_agent_instance(role = role_quiz, instructions = instructions_quiz.format(num_questions="10"))
     response = agent.run(topics_list_prompt)
     parsed_response = parse_json_response(response.content)
     print(parsed_response)

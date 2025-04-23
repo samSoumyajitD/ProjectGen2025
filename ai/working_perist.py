@@ -187,7 +187,7 @@ def parse_json_response(response)->list|None:
     # parsed_output = parser.invoke(response)
 
     match = re.search(r"```json",response, re.DOTALL)
-    print("match: ",match)
+    # print("match: ",match)
     if match:
         json_string = response[match.end():].strip(' \n`')
         print(json_string)
