@@ -207,8 +207,15 @@ def extract_roadmap_topics(roadmap:list[dict], week:int|None) -> list[str]:
         goal_list = roadmap[week-1].get("goals")
     else:
         for module in roadmap:
-            topic_list.extend(module.get("topics"))
-            goal_list.extend(module.get("goals")) 
+            
+            curr_topic_list = module.get("topics")
+            curr_goal_list = module.get("goals")
+
+            if curr_topic_list:
+                topic_list.extend(curr_topic_list)
+                
+            if curr_goal_list:
+                goal_list.extend(curr_goal_list) 
 
     return topic_list, goal_list 
 def generate_roadmap(retrieval_chain, personalized_prompt, user_goal=None):
@@ -264,7 +271,7 @@ if __name__ == "__main__":
     # # print("user_inputs: ",user_inputs, type(user_inputs))
     # print(user_inputs["goal"])
     roadmap = get_roadmap_data("6805f9af2328eebef7cffd50", "67a1fae0cd1963827d5c292e")
-    print("roadmap: ", roadmap)
-
+    a, b = extract_roadmap_topics(roadmap, None)
+    print(a, b)
 
     pass
