@@ -38,3 +38,23 @@ exports.createOrUpdateGoal = async (req, res) => {
         res.status(500).json({ message: error.message }); // Send back the error message
     }
 };
+
+exports.getGoalsByUserId = async (req, res) => {
+    try {
+        const userCookie = req.cookies.user;
+
+        if (!userCookie) {
+            return res.status(401).json({ message: "User not authenticated" });
+        }
+
+        // Parse cookie (if it's a stringified JSON)
+        const user = typeof userCookie === 'string' ? JSON.parse(userCookie) : userCookie;
+        const userId = user.id;
+
+        const goals = await Goal.find({ userId });
+
+        res.status(200).json({ goals });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
