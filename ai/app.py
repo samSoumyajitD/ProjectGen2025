@@ -27,7 +27,7 @@ load_dotenv()
 app = Flask(__name__)
 
 # Enable CORS for all routes
-CORS(app, origins=["http://localhost:3000"], supports_credentials=True)
+CORS(app)
 # MongoDB URI from .env
 MONGO_URI = os.getenv("MONGO_URI")
 
@@ -132,7 +132,7 @@ def remove_roadmap(user_id:str, goal_id:str):
         goal_id = ObjectId(goal_id)
 
         goals_collection.find_one_and_delete({"_id":goal_id, "userId":user_id})
-        roadmap_collection.find_one_and_delete({"user_id":user_id, "goal_id":goal_id})
+        roadmap_collection.find_one_and_delete({"userId":user_id, "goalId":goal_id})
 
         return jsonify({"success":"Goal removed successfully!"})
     except Exception as err:
