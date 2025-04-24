@@ -182,12 +182,12 @@ def create_personalized_prompt(user_inputs=None):
     """
     return user_prompt
     
-def parse_roadmap_response(response)->list|None:
+def parse_json_response(response)->list|None:
     # parser = StrOutputParser()
     # parsed_output = parser.invoke(response)
 
     match = re.search(r"```json",response, re.DOTALL)
-    print("match: ",match)
+    # print("match: ",match)
     if match:
         json_string = response[match.end():].strip(' \n`')
         print(json_string)
@@ -195,7 +195,29 @@ def parse_roadmap_response(response)->list|None:
         return roadmap_json
     else:
         return None
+    
+def extract_roadmap_topics(roadmap:list[dict], week:int|None) -> list[str]:
+    """
+        Reads the roadmap document and extracts the topics out of it based on the week provided. Returns two lists one for the topics and another for goals and if week is not provided or None then returns a list of all the topics and goals present in that roadmap.
+    """
+    topic_list=[]
+    goal_list=[]
+    if week:
+        topic_list = roadmap[week-1].get("topics")
+        goal_list = roadmap[week-1].get("goals")
+    else:
+        for module in roadmap:
+            
+            curr_topic_list = module.get("topics")
+            curr_goal_list = module.get("goals")
 
+            if curr_topic_list:
+                topic_list.extend(curr_topic_list)
+                
+            if curr_goal_list:
+                goal_list.extend(curr_goal_list) 
+
+    return topic_list, goal_list 
 def generate_roadmap(retrieval_chain, personalized_prompt, user_goal=None):
     try:
         print("\nGenerating your personalized roadmap...\n")
@@ -249,5 +271,7 @@ if __name__ == "__main__":
     # # print("user_inputs: ",user_inputs, type(user_inputs))
     # print(user_inputs["goal"])
     roadmap = get_roadmap_data("6805f9af2328eebef7cffd50", "67a1fae0cd1963827d5c292e")
-    print("roadmap: ", roadmap)
+    a, b = extract_roadmap_topics(roadmap, None)
+    print(a, b)
+
     pass

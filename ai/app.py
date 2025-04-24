@@ -1,8 +1,8 @@
-from flask import Flask, jsonify, request,make_response
+from flask import Flask, jsonify, request, make_response
 from pymongo import MongoClient
 from flask_cors import CORS
 from langchain.chains import RetrievalQA
-from working_perist import get_roadmap_data, parse_roadmap_response, create_combine_docs_template, get_mongo_data, get_vectorstore, setup_ai_model, create_personalized_prompt, generate_roadmap, save_roadmap_to_mongo
+from working_perist import extract_roadmap_topics, get_roadmap_data, parse_json_response, create_combine_docs_template, get_mongo_data, get_vectorstore, setup_ai_model, create_personalized_prompt, generate_roadmap, save_roadmap_to_mongo
 from bson import ObjectId
 from generateQuiz import generate_quiz, parse_quiz_to_json, store_quiz_in_db, roadmap_collection, parse_roadmap
 from generateQuiz import setup_ai_model, parse_roadmap, generate_quiz, parse_quiz_to_json, store_quiz_in_db
@@ -11,7 +11,7 @@ from langchain.chains.combine_documents.stuff import create_stuff_documents_chai
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers.string import StrOutputParser
 from agent import get_agent_instance
-from instructions_and_roles import role_structuring, role_text_info, instruction_text_info, instruction_structuring
+from instructions_and_roles import role_quiz, instructions_quiz, role_structuring, role_text_info, instruction_text_info, instruction_structuring
 from utils.yt_script import get_video_list
 import json
 import traceback
@@ -33,9 +33,9 @@ MONGO_URI = os.getenv("MONGO_URI")
 
 # MongoDB Client Setup
 client = MongoClient(MONGO_URI)
-db = client["Amdoc"]
+db = client["test"]
 collection = db["goals"]
-roadmap_collection = db["Roadmap"]
+roadmap_collection = db["roadmaps"]
 quiz_collection = db["KnowledgeAssessment"]
 
 # Get API Key from .env
@@ -74,18 +74,14 @@ def generate_roadmap_api(user_id:str, goal_id:str):
         #restructuring content to required json.
         content_for_restructuring = response.content + "\n\n\n" + video_list
         restructured_content = structuring_agent.run(content_for_restructuring)
-        parsed_response = parse_roadmap_response(restructured_content.content)
+        parsed_response = parse_json_response(restructured_content.content)
 
         if parsed_response:
             save_roadmap_to_mongo(user_id, goal_id, parsed_response, user_inputs["goal"])
-        # return parsed_response #TESTING
-        # print("response : ", response);
-        # json_response = structuring_agent.run(response.content)
-        # roadmap_json = parse_roadmap_response(json_response.content)
+        
         
         return jsonify({"roadmap": parsed_response}), 200
-        # else:
-        #     return jsonify({"error": "No JSON found in LLM response"}), 500
+        
 
     except Exception as err:
         traceback.print_exc()
@@ -129,36 +125,77 @@ def get_goals(user_id):
 
 # MongoDB Connection (redundant if already in generate_quiz.py, but kept for clarity)
 
+  
 
-@app.route('/generate-quiz', methods=['POST'])
-def generate_quiz_endpoint():
-    # Fetch roadmap from MongoDB
-    roadmap_entry = roadmap_collection.find_one({}, {"userID": 1, "roadmap": 1})
-    if not roadmap_entry:
-        return jsonify({"error": "No roadmap found in MongoDB"}), 404
-    
-    user_id = roadmap_entry["userID"]
-    roadmap_content = roadmap_entry["roadmap"]
 
-    # Parse and generate quiz
-    week_dict = parse_roadmap(roadmap_content)
-    if not week_dict:
-        return jsonify({"error": "No valid weekly sections found in roadmap"}), 400
+@app.route('/generate-quiz/<user_id>/<goal_id>', methods=['POST'])
+def generate_quiz_endpoint(user_id:str, goal_id:str):
+    """
+        Provide the field 'week' in the body of the request if the quiz is being generated for a specific week. 
+        For final quiz, simply dont send any body along with the request or an empty body.
+    """
+    try:
+        
+        user_id = ObjectId(user_id)
+        goal_id = ObjectId(goal_id)
+        # print("user_id: ", user_id, "goal_id: ", goal_id)
+        data = request.get_json()
+        week = data.get("week") if data else None
+        # print("week : ", week)
+        roadmap_document = roadmap_collection.find_one({"userId":user_id, "goalId":goal_id})
+        # print(roadmap_document["roadmap"])
+        if not roadmap_document :
+            return jsonify({"error": "No roadmap found in MongoDB"}), 404
+        
+        # print("roadmap: ", roadmap_document["roadmap"])
+        topic_list, goal_list = extract_roadmap_topics(roadmap_document["roadmap"], week)
 
-    first_week = next(iter(week_dict))
-    print(f"Generating quiz for {first_week}...")
+        questions_quantity = '5'
+        if not week:
+            questions_quantity="10"
 
-    # Setup AI model using API key from .env
-    chat_model = setup_ai_model(GROQ_API_KEY )
+        #instantiating agent
+        agent = get_agent_instance(role=role_quiz, instructions = instructions_quiz.format(num_questions=questions_quantity))
+        
+        quiz_prompt = f"""
+            Topics_list : {topic_list}
+            Goals_list : {goal_list}
+        """
+        
+        response = agent.run(quiz_prompt)
 
-    # Generate quiz
-    quiz_text = generate_quiz(chat_model, first_week, week_dict[first_week])
-    quiz_data = parse_quiz_to_json(quiz_text)
+        parsed_response = parse_json_response(response.content)
 
-    # Store quiz in MongoDB
-    store_quiz_in_db(user_id, quiz_data)
+        return jsonify({"quiz":parsed_response}),200
 
-    return jsonify({"message": "Quiz generated and stored successfully", "quiz_data": quiz_data}), 200
+        # print("topic_list: ", topic_list, type(topic_list))
+        return jsonify({"topics":topic_list, "goals":goal_list}),200
+    except Exception as err:
+        traceback.print_exc()
+        print("Error generating quiz : ", err)
+        return jsonify({"error":"Something went wrong while generating quiz :("}), 500
+    # user_id = roadmap_entry["userID"]
+    # roadmap_content = roadmap_entry["roadmap"]
+
+    # # Parse and generate quiz
+    # week_dict = roadmap_document
+    # if not week_dict:
+    #     return jsonify({"error": "No valid weekly sections found in roadmap"}), 400
+
+    # first_week = next(iter(week_dict))
+    # print(f"Generating quiz for {first_week}...")
+
+    # # Setup AI model using API key from .env
+    # chat_model = setup_ai_model(GROQ_API_KEY )
+
+    # # Generate quiz
+    # quiz_text = generate_quiz(chat_model, first_week, week_dict[first_week])
+    # quiz_data = parse_quiz_to_json(quiz_text)
+
+    # # Store quiz in MongoDB
+    # store_quiz_in_db(user_id, quiz_data)
+
+    # return jsonify({"message": "Quiz generated and stored successfully", "quiz_data": quiz_data}), 200
 
 @app.route('/get_quiz', methods=['GET'])
 def get_quiz():
