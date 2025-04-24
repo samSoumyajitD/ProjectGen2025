@@ -34,7 +34,7 @@ MONGO_URI = os.getenv("MONGO_URI")
 # MongoDB Client Setup
 client = MongoClient(MONGO_URI)
 db = client["test"]
-collection = db["goals"]
+goals_collection = db["goals"]
 roadmap_collection = db["roadmaps"]
 quiz_collection = db["KnowledgeAssessment"]
 
@@ -106,7 +106,7 @@ def object_id_to_str(obj):
 @app.route('/goals/<user_id>', methods=['GET'])
 def get_goals(user_id):
     # Query to fetch all goals for a specific userId
-    goals_data = collection.find({"userId": ObjectId(user_id)})
+    goals_data = goals_collection.find({"userId": ObjectId(user_id)})
 
     # Convert ObjectId to string for serialization
     goals_list = []
@@ -125,7 +125,20 @@ def get_goals(user_id):
 
 # MongoDB Connection (redundant if already in generate_quiz.py, but kept for clarity)
 
-  
+@app.route('/remove-roadmap/<user_id>/<goal_id>', methods=["DELETE"])
+def remove_roadmap(user_id:str, goal_id:str):
+    try:
+        user_id = ObjectId(user_id)
+        goal_id = ObjectId(goal_id)
+
+        goals_collection.find_one_and_delete({"_id":goal_id, "userId":user_id})
+        roadmap_collection.find_one_and_delete({"user_id":user_id, "goal_id":goal_id})
+
+        return jsonify({"success":"Goal removed successfully!"})
+    except Exception as err:
+        print("Error at remove-roadmap endpoint : ",err)
+        traceback.print_exc()
+        return jsonify({"error":"Something went wrong. Please try again later :("}), 500
 
 
 @app.route('/generate-quiz/<user_id>/<goal_id>', methods=['POST'])
@@ -133,7 +146,7 @@ def generate_quiz_endpoint(user_id:str, goal_id:str):
     """
         Provide the field 'week' in the body of the request if the quiz is being generated for a specific week. 
         For final quiz, simply dont send any body along with the request or an empty body.
-    """
+    """ 
     try:
         
         user_id = ObjectId(user_id)
