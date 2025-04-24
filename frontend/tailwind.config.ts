@@ -34,14 +34,14 @@ export default {
           "0%": { transform: "translateX(-200px)" },
           "100%": { transform: "translateX(200px)" },
         },
-        floatEven: {
-          '0%, 100%': { transform: 'translateY(0)' },
-          '50%': { transform: 'translateY(-10px)' },
-        },
-        floatOdd: {
-          '0%, 100%': { transform: 'translateY(0)' },
-          '50%': { transform: 'translateY(-15px)' },
-        },
+        // floatEven: {
+        //   '0%, 100%': { transform: 'translateY(0)' },
+        //   '50%': { transform: 'translateY(-10px)' },
+        // },
+        // floatOdd: {
+        //   '0%, 100%': { transform: 'translateY(0)' },
+        //   '50%': { transform: 'translateY(-15px)' },
+        // },
       },
       animation: {
         

@@ -101,7 +101,17 @@ export default function GoalQuiz() {
           { ...formData, userId }, // Include userId in the request body
           { withCredentials: true }
         );
+
+const roadmapresponse = await axios.post(
+  `http://127.0.0.1:5000/generate-roadmap/${userId}/${response.data.goal._id}`,
+  { userId, goalId: response.data.goal._id }, // Include userId and goalId in the request body
+  { withCredentials: true },
+
+
+)
+
         alert("Goal set successfully!");
+
   
         // Redirect based on user role
         const userRole = Cookies.get("role");
@@ -112,7 +122,9 @@ export default function GoalQuiz() {
         }
       } catch (error) {
         setError(error.response?.data?.message || 'Error setting goal');
+        console.log(error);
         alert(error.response?.data?.message || 'Error setting goal');
+
       } finally {
         setIsSubmitting(false);
       }
