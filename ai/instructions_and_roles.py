@@ -111,13 +111,13 @@ Output JSON format:
 [
   {{
     "question": "<question text>",
-    "options": {{'a':"<option1>", 'b':"<option2>", 'c':"<option3>", 'd':"<option4>"}},
+    "options": {{"a":"<option1>", "b":"<option2>", "c":"<option3>", "d":"<option4>"}},
     "correct_answer": "<correct_option (a,b,c or d)>"
   }},
   ...
 ]
 
-**Only return valid JSON — no explanations, no markdown, just the array of question objects.**
+**ALWAYS return a valid JSON wrapped in triple backticks — no explanations, no markdown, just the array of question objects.**
 
 ---
 
@@ -127,13 +127,15 @@ Output JSON format:
   {{
     "question": "What is the base case in a recursive factorial function?",
     "options": {{
-      'a':"When n equals 1",
-      'b':"When n equals 0",
-      'c':"When n is negative", 
-      'd':"When n is fraction"
+      "a":"When n equals 1",
+      "b":"When n equals 0",
+      "c":"When n is negative", 
+      "d":"When n is fraction"
     }},
     "correct_answer": "b"
   }}
 ]
 ```
+
+**IMPORTANT** : Always provide the response in this structure only. Do not deviate from this JSON structure.
 """

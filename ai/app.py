@@ -2,7 +2,7 @@ from flask import Flask, jsonify, request, make_response
 from pymongo import MongoClient
 from flask_cors import CORS
 from langchain.chains import RetrievalQA
-from working_perist import extract_roadmap_topics, get_roadmap_data, parse_json_response, create_combine_docs_template, get_mongo_data, get_vectorstore, setup_ai_model, create_personalized_prompt, generate_roadmap, save_roadmap_to_mongo
+from working_perist import extract_roadmap_topics, get_roadmap_data, parse_json_response, create_combine_docs_template, get_mongo_data, get_vectorstore, save_quiz_to_mongo, setup_ai_model, create_personalized_prompt, generate_roadmap, save_roadmap_to_mongo
 from bson import ObjectId
 from generateQuiz import generate_quiz, parse_quiz_to_json, store_quiz_in_db, roadmap_collection, parse_roadmap
 from generateQuiz import setup_ai_model, parse_roadmap, generate_quiz, parse_quiz_to_json, store_quiz_in_db
@@ -142,7 +142,7 @@ def remove_roadmap(user_id:str, goal_id:str):
 
 
 @app.route('/generate-quiz/<user_id>/<goal_id>', methods=['POST'])
-def generate_quiz_endpoint(user_id:str, goal_id:str):
+def generate_quiz_api(user_id:str, goal_id:str):
     """
         Provide the field 'week' in the body of the request if the quiz is being generated for a specific week. 
         For final quiz, simply dont send any body along with the request or an empty body.
@@ -173,16 +173,26 @@ def generate_quiz_endpoint(user_id:str, goal_id:str):
         quiz_prompt = f"""
             Topics_list : {topic_list}
             Goals_list : {goal_list}
+            week: {week if week else "final"}
         """
         
         response = agent.run(quiz_prompt)
 
         parsed_response = parse_json_response(response.content)
+        quiz_document = {"week":(week if week else "final"), "quiz":parsed_response, "goalId":goal_id, "userId":user_id}
+        mongo_response = save_quiz_to_mongo(quiz_document)
 
-        return jsonify({"quiz":parsed_response}),200
+        if not mongo_response:
+            raise Exception("Error while storing the quiz data.")
 
-        # print("topic_list: ", topic_list, type(topic_list))
-        return jsonify({"topics":topic_list, "goals":goal_list}),200
+        return jsonify({
+            "week":quiz_document["week"], 
+            "userId":str(quiz_document["userId"]), 
+            "goalId":str(quiz_document["goalId"]), 
+            "quiz":quiz_document["quiz"]
+        }),200
+
+        
     except Exception as err:
         traceback.print_exc()
         print("Error generating quiz : ", err)

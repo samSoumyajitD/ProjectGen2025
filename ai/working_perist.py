@@ -95,7 +95,17 @@ def save_quiz_to_mongo(quiz_object) -> bool:
         client = MongoClient(MONGO_URI)
         db = client["test"]
         quiz_collection = db["quiz"]
-        quiz_collection.insert_one(quiz_object)
+        existing_quiz = quiz_collection.find_one({"userId":quiz_object["userId"], "goalId":quiz_object["goalId"], "week":quiz_object["week"]})
+
+        if existing_quiz:
+            quiz_collection.update_one(
+                {"_id":existing_quiz["_id"]}, 
+                {"$set":quiz_object}
+            )
+            
+        else:
+            quiz_collection.insert_one(quiz_object)
+        print("quiz saved successfully!")
         return True
     except Exception as err:
         print("Error while saving quiz to DB : ", err)
@@ -197,7 +207,7 @@ def create_personalized_prompt(user_inputs=None):
 def parse_json_response(response)->list|None:
     # parser = StrOutputParser()
     # parsed_output = parser.invoke(response)
-
+    print("to be parsed: ", response)
     match = re.search(r"```json",response, re.DOTALL)
     # print("match: ",match)
     if match:
