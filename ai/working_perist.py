@@ -17,7 +17,7 @@ from langchain_groq import ChatGroq
 from pathlib import Path
 from langchain_google_genai import ChatGoogleGenerativeAI
 from phi.agent import Agent
-
+from quiz_sample_response import sample_quiz
 import traceback
 
 # Initialize Flask app
@@ -89,6 +89,18 @@ def save_roadmap_to_mongo(user_id, goal_id, roadmap, goal):
         # Insert a new roadmap document if no existing one is found
         collection.insert_one(roadmap_data)
         print(f"\n✅ Roadmap saved successfully in MongoDB for userID: {user_id}")
+
+def save_quiz_to_mongo(quiz_object) -> bool: 
+    try:
+        client = MongoClient(MONGO_URI)
+        db = client["test"]
+        quiz_collection = db["quiz"]
+        quiz_collection.insert_one(quiz_object)
+        return True
+    except Exception as err:
+        print("Error while saving quiz to DB : ", err)
+        return False
+
 
 def get_roadmap_data(user_id, goal_id):
     try:
@@ -270,8 +282,10 @@ if __name__ == "__main__":
     # user_inputs = get_mongo_data(ObjectId("67a1fae0cd1963827d5c292e"), ObjectId("6805f9af2328eebef7cffd50"))
     # # print("user_inputs: ",user_inputs, type(user_inputs))
     # print(user_inputs["goal"])
-    roadmap = get_roadmap_data("6805f9af2328eebef7cffd50", "67a1fae0cd1963827d5c292e")
-    a, b = extract_roadmap_topics(roadmap, None)
-    print(a, b)
-
+    # roadmap = get_roadmap_data("6805f9af2328eebef7cffd50", "67a1fae0cd1963827d5c292e")
+    # a, b = extract_roadmap_topics(roadmap, None)
+    # print(a, b)
+    
+    response = save_quiz_to_mongo(sample_quiz)
+    print("response : ", response)
     pass
