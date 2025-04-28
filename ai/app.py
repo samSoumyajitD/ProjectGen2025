@@ -36,12 +36,11 @@ client = MongoClient(MONGO_URI)
 db = client["test"]
 goals_collection = db["goals"]
 roadmap_collection = db["roadmaps"]
-quiz_collection = db["KnowledgeAssessment"]
+quiz_collection = db["quiz"]
 
-# Get API Key from .env
-GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 
-@app.route('/generate-roadmap/<user_id>/<goal_id>', methods=['POST'])
+
+@app.route('/generate-roadmap/<user_id>/<goal_id>', methods=['GET'])
 def generate_roadmap_api(user_id:str, goal_id:str):
     
     try:
@@ -97,6 +96,7 @@ def fetch_roadmap_data(user_id:str, goal_id:str):
     except Exception as err:
         print("Error fetching roadmap data: ", err)
         return jsonify({"error":"Something went wrong :("}), 500
+
 def object_id_to_str(obj):
     if isinstance(obj, ObjectId):
         return str(obj)
@@ -139,7 +139,6 @@ def remove_roadmap(user_id:str, goal_id:str):
         print("Error at remove-roadmap endpoint : ",err)
         traceback.print_exc()
         return jsonify({"error":"Something went wrong. Please try again later :("}), 500
-
 
 @app.route('/generate-quiz/<user_id>/<goal_id>', methods=['POST'])
 def generate_quiz_api(user_id:str, goal_id:str):
@@ -220,22 +219,24 @@ def generate_quiz_api(user_id:str, goal_id:str):
 
     # return jsonify({"message": "Quiz generated and stored successfully", "quiz_data": quiz_data}), 200
 
-@app.route('/get_quiz', methods=['GET'])
-def get_quiz():
+@app.route('/get-quiz/<user_id>/<goal_id>/<week>', methods=['GET'])
+def get_quiz(user_id:str, goal_id:str, week:str):
     # Fetch the latest quiz from MongoDB
-    quiz_entry = quiz_collection.find_one({}, sort=[("_id", -1)])  # Get the most recent quiz
-    if not quiz_entry:
-        return jsonify({"error": "No quiz found in MongoDB"}), 404
-    
-    # Create a response
-    response = make_response(jsonify({"quiz": quiz_entry["quiz"]}), 200)
-    
-    # Manually add CORS headers if necessary
-    response.headers['Access-Control-Allow-Origin']  = '*'
-    response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE'
-    response.headers['Access-Control-Allow-Headers'] = 'Content-Type'
-    
-    return response
+    try:
+        user_id=ObjectId(user_id)
+        goal_id=ObjectId(goal_id)
+        quiz_entry = quiz_collection.find_one({"userId":user_id, "goalId":goal_id, "week":week})  # Get the most recent quiz
+        
+        if not quiz_entry:
+            return jsonify({"error": "No such quiz found"}), 404
+
+        return jsonify({
+            "quiz":quiz_entry["quiz"]
+        }), 200
+    except Exception as err:
+        print("err: ",err)
+        return jsonify({"error":"Something went wrong :("}),500
+
 if __name__ == '__main__':
     # app.run(debug=True)
     # parser = StrOutputParser()
