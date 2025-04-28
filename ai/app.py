@@ -216,20 +216,18 @@ def generate_quiz_api(user_id:str, goal_id:str):
 
     # return jsonify({"message": "Quiz generated and stored successfully", "quiz_data": quiz_data}), 200
 
-@app.route('/get-quiz/<user_id>/<goal_id>/<week>', methods=['GET'])
-def get_quiz(user_id:str, goal_id:str, week:str):
+@app.route('/get-quiz/<quiz_id>', methods=['GET'])
+def get_quiz(quiz_id:str):
     # Fetch the latest quiz from MongoDB
     try:
-        user_id=ObjectId(user_id)
-        goal_id=ObjectId(goal_id)
-        quiz_entry = quiz_collection.find_one({"userId":user_id, "goalId":goal_id, "week":week})  # Get the most recent quiz
+        quiz_id = ObjectId(quiz_id)
+        quiz_entry = quiz_collection.find_one({"_id":quiz_id})  # Get the most recent quiz
         
         if not quiz_entry:
             return jsonify({"error": "No such quiz found"}), 404
 
         return jsonify({
             "quiz":quiz_entry["quiz"], 
-            "quizId":str(quiz_entry["_id"])
         }), 200
     except Exception as err:
         print("err: ",err)
