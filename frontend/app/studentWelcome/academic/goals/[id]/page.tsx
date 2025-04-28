@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import Cookies from "js-cookie";
 import axios from "axios";
 import YouTube from 'react-youtube';
+import { ChevronDown, ChevronUp } from "lucide-react";
 
 const GoalPage = () => {
   const params = useParams();
@@ -14,6 +15,12 @@ const GoalPage = () => {
   const [error, setError] = useState<string>("");
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  const [isQuizModalOpen, setIsQuizModalOpen] = useState(false);
+  const [quizType, setQuizType] = useState<'week' | 'final' | null>(null);
+  const [quizWeek, setQuizWeek] = useState<number | null>(null);
+
+  const [expandedWeeks, setExpandedWeeks] = useState<{ [key: number]: boolean }>({});
 
   useEffect(() => {
     const fetchRoadmap = async () => {
@@ -33,7 +40,6 @@ const GoalPage = () => {
           withCredentials: true,
         });
 
-        // Filter out empty weeks and sort by week number
         const filteredRoadmap = res.data.roadmap.filter((week: any) => week.week && week.topics?.length > 0);
         filteredRoadmap.sort((a: any, b: any) => a.week - b.week);
         setRoadmap(filteredRoadmap);
@@ -62,6 +68,22 @@ const GoalPage = () => {
     setSelectedVideo(null);
   };
 
+  const openQuizModal = (type: 'week' | 'final', week?: number) => {
+    setQuizType(type);
+    setQuizWeek(week || null);
+    setIsQuizModalOpen(true);
+  };
+
+  const closeQuizModal = () => {
+    setIsQuizModalOpen(false);
+    setQuizType(null);
+    setQuizWeek(null);
+  };
+
+  const toggleWeekExpand = (week: number) => {
+    setExpandedWeeks(prev => ({ ...prev, [week]: !prev[week] }));
+  };
+
   if (error) {
     return (
       <div className="p-6 max-w-3xl mx-auto">
@@ -83,103 +105,146 @@ const GoalPage = () => {
 
   return (
     <div className="p-6 max-w-4xl mx-auto">
-      <h1 className="text-3xl font-bold text-gray-800 dark:text-white mb-6">
-        Your Learning Roadmap
+      <h1 className="text-3xl font-bold text-gray-800 mb-6 text-center">
+        🚀 Your Learning Roadmap
       </h1>
-      
-      {roadmap.length === 0 && (
+
+      {roadmap.length === 0 ? (
         <div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4">
           <p>No roadmap data available for this goal.</p>
         </div>
+      ) : (
+        <div className="space-y-8">
+          {roadmap.map((weekData) => {
+            const isExpanded = expandedWeeks[weekData.week];
+            return (
+              <div
+                key={weekData.week}
+                className="bg-white dark:bg-gray-900 rounded-[20px] shadow-md hover:shadow-xl transition-shadow overflow-hidden border dark:border-gray-700"
+              >
+                {/* Header */}
+                <div
+                  onClick={() => toggleWeekExpand(weekData.week)}
+                  className="bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-700 dark:to-indigo-800 px-6 py-4 flex justify-between items-center cursor-pointer"
+                >
+                  <h2 className="text-2xl font-bold text-white drop-shadow-md">
+                    Week {weekData.week}
+                  </h2>
+                  <div className="flex items-center gap-4">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        openQuizModal('week', weekData.week);
+                      }}
+                      className="bg-white text-blue-700 font-semibold text-sm px-5 py-2 rounded-full shadow hover:bg-gray-100 transition hover:scale-105"
+                    >
+                      Take Quiz
+                    </button>
+                    {isExpanded ? (
+                      <ChevronUp className="text-white" />
+                    ) : (
+                      <ChevronDown className="text-white" />
+                    )}
+                  </div>
+                </div>
+
+                {/* Expandable Content */}
+                {isExpanded && (
+                  <div className="p-6 space-y-8 animate-fadeIn">
+                    {/* Goals */}
+                    <div>
+                      <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-2">🎯 Weekly Goals</h3>
+                      <ul className="list-disc list-inside text-gray-700 dark:text-gray-300 space-y-1 pl-2">
+                        {weekData.goals?.map((goal: string, index: number) => (
+                          <li key={index}>{goal}</li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    {/* Topics */}
+                    <div>
+                      <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-2">📚 Topics Covered</h3>
+                      <div className="flex flex-wrap gap-3">
+                        {weekData.topics?.map((topic: string, index: number) => (
+                          <span
+                            key={index}
+                            className="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-sm px-4 py-2 rounded-full font-medium shadow"
+                          >
+                            {topic}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Suggested Videos */}
+                    <div>
+                      <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-4">🎥 Recommended Videos</h3>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        {weekData.suggested_yt_videos?.map((video: string, index: number) => {
+                          const videoId = extractVideoId(video);
+                          const thumbnailUrl = videoId ? `https://img.youtube.com/vi/${videoId}/mqdefault.jpg` : '';
+
+                          return (
+                            <div
+                              key={index}
+                              onClick={() => openVideoModal(video)}
+                              className="cursor-pointer bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-transform hover:scale-105"
+                            >
+                              <div className="relative w-full h-40">
+                                {thumbnailUrl && (
+                                  <img
+                                    src={thumbnailUrl}
+                                    alt="Video thumbnail"
+                                    className="w-full h-full object-cover"
+                                  />
+                                )}
+                              </div>
+                              <div className="p-4 text-left">
+                                <p className="text-sm text-gray-700 dark:text-gray-300 truncate">
+                                  {video}
+                                </p>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
       )}
 
-      <div className="space-y-8">
-        {roadmap.map((weekData) => (
-          <div key={weekData.week} className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
-            <div className="bg-blue-600 dark:bg-blue-800 px-4 py-3">
-              <h2 className="text-xl font-semibold text-white">Week {weekData.week}</h2>
-            </div>
-            
-            <div className="p-4">
-              <div className="mb-4">
-                <h3 className="text-lg font-medium text-gray-800 dark:text-gray-200 mb-2">Goals</h3>
-                <ul className="list-disc pl-5 space-y-1 text-gray-700 dark:text-gray-300">
-                  {weekData.goals?.map((goal: string, index: number) => (
-                    <li key={index}>{goal}</li>
-                  ))}
-                </ul>
-              </div>
-              
-              <div className="mb-4">
-                <h3 className="text-lg font-medium text-gray-800 dark:text-gray-200 mb-2">Topics</h3>
-                <div className="flex flex-wrap gap-2">
-                  {weekData.topics?.map((topic: string, index: number) => (
-                    <span 
-                      key={index}
-                      className="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-sm px-3 py-1 rounded-full"
-                    >
-                      {topic}
-                    </span>
-                  ))}
-                </div>
-              </div>
-              
-              <div>
-                <h3 className="text-lg font-medium text-gray-800 dark:text-gray-200 mb-2">Recommended Videos</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  {weekData.suggested_yt_videos?.map((video: string, index: number) => {
-                    const videoId = extractVideoId(video);
-                    const thumbnailUrl = videoId ? `https://img.youtube.com/vi/${videoId}/mqdefault.jpg` : '';
-                    
-                    return (
-                      <div 
-                        key={index}
-                        onClick={() => openVideoModal(video)}
-                        className="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg overflow-hidden transition-colors"
-                      >
-                        <div className="flex">
-                          {thumbnailUrl && (
-                            <div className="w-1/3 flex-shrink-0">
-                              <img 
-                                src={thumbnailUrl} 
-                                alt="Video thumbnail" 
-                                className="w-full h-full object-cover"
-                              />
-                            </div>
-                          )}
-                          <div className="p-3 w-2/3">
-                            <p className="text-sm text-gray-800 dark:text-gray-200 line-clamp-2">
-                              {video}
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            </div>
-          </div>
-        ))}
+      {/* Final Assessment Button */}
+      <div className="mt-12 flex justify-center">
+        <button
+          onClick={() => openQuizModal('final')}
+          className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition hover:scale-105"
+        >
+          Take Final Assessment Test
+        </button>
       </div>
 
       {/* Video Modal */}
       {selectedVideo && (
-        <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4">
-          <div className="bg-white dark:bg-gray-800 rounded-lg w-full max-w-4xl max-h-[90vh] overflow-auto">
-            <div className="flex justify-between items-center p-4 border-b">
-              <h3 className="text-lg font-medium">Video Player</h3>
-              <button 
+        <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
+            {/* Header */}
+            <div className="flex justify-between items-center px-6 py-4 border-b dark:border-gray-700">
+              <h3 className="text-2xl font-bold text-gray-800 dark:text-white">🎬 Video Player</h3>
+              <button
                 onClick={closeVideoModal}
-                className="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
+                className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition transform hover:scale-110"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
+                ✖
               </button>
             </div>
-            <div className="p-4">
-              <div className="aspect-w-16 aspect-h-9">
+
+            {/* Video */}
+            <div className="flex-1 overflow-auto p-6">
+              <div className="aspect-w-16 aspect-h-9 rounded-lg overflow-hidden">
                 <YouTube
                   videoId={extractVideoId(selectedVideo) || ''}
                   opts={{
@@ -190,20 +255,46 @@ const GoalPage = () => {
                       rel: 0
                     }
                   }}
-                  className="w-full"
+                  className="w-full h-full"
                 />
               </div>
-              <div className="mt-4">
-                <a 
-                  href={selectedVideo} 
-                  target="_blank" 
+              <div className="mt-6 flex justify-center">
+                <a
+                  href={selectedVideo}
+                  target="_blank"
                   rel="noopener noreferrer"
-                  className="text-blue-600 dark:text-blue-400 hover:underline"
+                  className="inline-block bg-blue-600 text-white font-semibold px-6 py-2 rounded-full hover:bg-blue-700 transition"
                 >
                   Watch on YouTube
                 </a>
               </div>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Quiz Modal */}
+      {isQuizModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 transition-all">
+          <div className="relative bg-gradient-to-br from-blue-600 to-indigo-700 dark:from-blue-800 dark:to-indigo-900 w-full max-w-2xl p-10 rounded-3xl shadow-2xl text-center animate-fadeIn">
+            <button
+              onClick={closeQuizModal}
+              className="absolute top-4 right-4 text-white hover:text-gray-300 transition"
+            >
+              ✖
+            </button>
+            <h2 className="text-3xl font-extrabold text-white mb-6 drop-shadow-md">
+              {quizType === 'week' ? `Week ${quizWeek} Quiz` : 'Final Assessment Test'}
+            </h2>
+            <button
+              onClick={() => alert('Generate quiz functionality coming soon!')}
+              className="bg-white text-blue-700 font-bold text-lg py-3 px-6 rounded-full hover:bg-gray-100 transition transform hover:scale-105 shadow-md"
+            >
+              Generate Quiz
+            </button>
+            <p className="mt-6 text-white opacity-80 text-sm">
+              Ready to test your knowledge? 🚀
+            </p>
           </div>
         </div>
       )}
