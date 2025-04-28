@@ -19,6 +19,9 @@ const GoalPage = () => {
   const [isQuizModalOpen, setIsQuizModalOpen] = useState(false);
   const [quizType, setQuizType] = useState<'week' | 'final' | null>(null);
   const [quizWeek, setQuizWeek] = useState<number | null>(null);
+  const [isGeneratingQuiz, setIsGeneratingQuiz] = useState(false);
+  const [quizGenerated, setQuizGenerated] = useState(false);
+  const [quizId, setQuizId] = useState<string | null>(null);
 
   const [expandedWeeks, setExpandedWeeks] = useState<{ [key: number]: boolean }>({});
 
@@ -72,16 +75,60 @@ const GoalPage = () => {
     setQuizType(type);
     setQuizWeek(week || null);
     setIsQuizModalOpen(true);
+    setQuizGenerated(false);
+    setQuizId(null);
   };
 
   const closeQuizModal = () => {
     setIsQuizModalOpen(false);
     setQuizType(null);
     setQuizWeek(null);
+    setQuizGenerated(false);
+    setQuizId(null);
   };
 
   const toggleWeekExpand = (week: number) => {
     setExpandedWeeks(prev => ({ ...prev, [week]: !prev[week] }));
+  };
+
+  const generateQuiz = async () => {
+    try {
+      setIsGeneratingQuiz(true);
+      const userCookie = Cookies.get("user");
+      if (!userCookie) {
+        setError("User not authenticated");
+        return;
+      }
+
+      const user = JSON.parse(userCookie);
+      const userId = user.id;
+
+      const endpoint = `http://127.0.0.1:5000/generate-quiz/${userId}/${goalId}`;
+      const payload = quizType === 'week' ? { week: quizWeek } : {};
+
+      const response = await axios.post(endpoint, payload, {
+        withCredentials: true
+      });
+
+      // Mark quiz as generated and store quiz ID if needed
+      setQuizGenerated(true);
+      setQuizId(response.data.quiz?._id || null);
+      
+      console.log("Quiz generated successfully:", response.data);
+    } catch (err: any) {
+      console.error("Error generating quiz:", err);
+      setError(err.response?.data?.error || "Failed to generate quiz");
+    } finally {
+      setIsGeneratingQuiz(false);
+    }
+  };
+
+  const handleAttemptQuiz = () => {
+    // This function would be called when user clicks "Attempt"
+    // For now, just log that the user wants to attempt the quiz
+    console.log("Attempting quiz...");
+    // Here you would navigate to the quiz attempt page or open a quiz interface
+    // For example: router.push(`/quiz/${quizId}`);
   };
 
   if (error) {
@@ -286,15 +333,37 @@ const GoalPage = () => {
             <h2 className="text-3xl font-extrabold text-white mb-6 drop-shadow-md">
               {quizType === 'week' ? `Week ${quizWeek} Quiz` : 'Final Assessment Test'}
             </h2>
-            <button
-              onClick={() => alert('Generate quiz functionality coming soon!')}
-              className="bg-white text-blue-700 font-bold text-lg py-3 px-6 rounded-full hover:bg-gray-100 transition transform hover:scale-105 shadow-md"
-            >
-              Generate Quiz
-            </button>
-            <p className="mt-6 text-white opacity-80 text-sm">
-              Ready to test your knowledge? 🚀
-            </p>
+            
+            {/* Show loading spinner when generating quiz */}
+            {isGeneratingQuiz && (
+              <div className="flex flex-col items-center justify-center py-8">
+                <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-white mb-4"></div>
+                <p className="text-white font-medium">Generating your quiz...</p>
+                <p className="text-white opacity-70 text-sm mt-2">This may take a few moments</p>
+              </div>
+            )}
+            
+            {/* Show Generate Quiz or Attempt button based on quiz generation status */}
+            {!isGeneratingQuiz && (
+              <button
+                onClick={quizGenerated ? handleAttemptQuiz : generateQuiz}
+                className="bg-white text-blue-700 font-bold text-lg py-3 px-6 rounded-full hover:bg-gray-100 transition transform hover:scale-105 shadow-md"
+              >
+                {quizGenerated ? "Attempt Quiz" : "Generate Quiz"}
+              </button>
+            )}
+            
+            {!isGeneratingQuiz && !quizGenerated && (
+              <p className="mt-6 text-white opacity-80 text-sm">
+                Ready to test your knowledge? 🚀
+              </p>
+            )}
+            
+            {!isGeneratingQuiz && quizGenerated && (
+              <p className="mt-6 text-white opacity-80 text-sm">
+                Your quiz is ready to take! 📝
+              </p>
+            )}
           </div>
         </div>
       )}
