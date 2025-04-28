@@ -160,7 +160,7 @@ def generate_quiz_api(user_id:str, goal_id:str):
             return jsonify({"error": "No roadmap found in MongoDB"}), 404
         
         # print("roadmap: ", roadmap_document["roadmap"])
-        topic_list, goal_list = extract_roadmap_topics(roadmap_document["roadmap"], week)
+        topic_list, goal_list = extract_roadmap_topics(roadmap_document["roadmap"], str(week))
 
         questions_quantity = '5'
         if not week:
