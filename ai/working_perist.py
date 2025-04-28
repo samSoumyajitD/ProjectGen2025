@@ -102,14 +102,15 @@ def save_quiz_to_mongo(quiz_object) -> bool:
                 {"_id":existing_quiz["_id"]}, 
                 {"$set":quiz_object}
             )
+            return existing_quiz["_id"]
             
         else:
-            quiz_collection.insert_one(quiz_object)
-        print("quiz saved successfully!")
-        return True
+            response = quiz_collection.insert_one(quiz_object)
+            return response.inserted_id
+        
     except Exception as err:
         print("Error while saving quiz to DB : ", err)
-        return False
+        return None
 
 
 def get_roadmap_data(user_id, goal_id):

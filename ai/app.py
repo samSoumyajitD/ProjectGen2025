@@ -179,16 +179,13 @@ def generate_quiz_api(user_id:str, goal_id:str):
 
         parsed_response = parse_json_response(response.content)
         quiz_document = {"week":(str(week) if week else "final"), "quiz":parsed_response, "goalId":goal_id, "userId":user_id}
-        mongo_response = save_quiz_to_mongo(quiz_document)
+        document_id = save_quiz_to_mongo(quiz_document)
 
-        if not mongo_response:
+        if not document_id:
             raise Exception("Error while storing the quiz data.")
 
         return jsonify({
-            "week":quiz_document["week"], 
-            "userId":str(quiz_document["userId"]), 
-            "goalId":str(quiz_document["goalId"]), 
-            "quiz":quiz_document["quiz"]
+            "quizId":str(document_id)
         }),200
 
         
