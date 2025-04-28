@@ -231,7 +231,8 @@ def get_quiz(user_id:str, goal_id:str, week:str):
             return jsonify({"error": "No such quiz found"}), 404
 
         return jsonify({
-            "quiz":quiz_entry["quiz"]
+            "quiz":quiz_entry["quiz"], 
+            "quizId":str(quiz_entry["_id"])
         }), 200
     except Exception as err:
         print("err: ",err)
