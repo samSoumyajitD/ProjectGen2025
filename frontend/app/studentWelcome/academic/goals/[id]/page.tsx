@@ -114,7 +114,7 @@ const GoalPage = () => {
           <p>No roadmap data available for this goal.</p>
         </div>
       ) : (
-        <div className="space-y-8">
+        <div className="space-y-4">
           {roadmap.map((weekData) => {
             const isExpanded = expandedWeeks[weekData.week];
             return (
