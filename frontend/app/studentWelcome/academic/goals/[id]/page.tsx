@@ -124,11 +124,22 @@ const GoalPage = () => {
   };
 
   const handleAttemptQuiz = () => {
-    // This function would be called when user clicks "Attempt"
-    // For now, just log that the user wants to attempt the quiz
-    console.log("Attempting quiz...");
-    // Here you would navigate to the quiz attempt page or open a quiz interface
-    // For example: router.push(`/quiz/${quizId}`);
+    if (quizId) {
+      // Open a new window with the quiz attempt page
+      const quizWindow = window.open(`/quiz/${quizId}`, '_blank', 'width=1000,height=700');
+      
+      // Focus the new window if it was successfully opened
+      if (quizWindow) {
+        quizWindow.focus();
+      } else {
+        // Handle case where popup was blocked
+        alert('Popup was blocked. Please allow popups for this site to take the quiz.');
+        // Alternatively, you could navigate in the same window:
+        // router.push(`/quiz/${quizId}`);
+      }
+    } else {
+      console.error("No quiz ID available");
+    }
   };
 
   if (error) {
