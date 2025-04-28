@@ -27,7 +27,7 @@ load_dotenv()
 app = Flask(__name__)
 
 # Enable CORS for all routes
-CORS(app, origins=["http://localhost:3000"])
+CORS(app, origins=["http://localhost:3000"], supports_credentials=True) 
 # MongoDB URI from .env
 MONGO_URI = os.getenv("MONGO_URI")
 
