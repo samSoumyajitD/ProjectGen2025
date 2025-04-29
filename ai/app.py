@@ -158,10 +158,11 @@ def generate_quiz_api(user_id:str, goal_id:str):
         # print(roadmap_document["roadmap"])
         if not roadmap_document :
             return jsonify({"error": "No roadmap found in MongoDB"}), 404
+        print("found roadmap")
         
         # print("roadmap: ", roadmap_document["roadmap"])
         topic_list, goal_list = extract_roadmap_topics(roadmap_document["roadmap"], week)
-
+        print("extracted topic lists")
         questions_quantity = '5'
         if not week:
             questions_quantity="10"
@@ -176,11 +177,11 @@ def generate_quiz_api(user_id:str, goal_id:str):
         """
         
         response = agent.run(quiz_prompt)
-
+        print("got llm response.")
         parsed_response = parse_json_response(response.content)
-        quiz_document = {"week":(str(week) if week else "final"), "quiz":parsed_response, "goalId":goal_id, "userId":user_id}
+        quiz_document = {"week":(str(week) if week else "final"), "quiz":parsed_response[:len(parsed_response)-1], "correct_answers":parsed_response[-1]["correct_answers"], "goalId":goal_id, "userId":user_id}
         document_id = save_quiz_to_mongo(quiz_document)
-
+        print("storing document to mongo")
         if not document_id:
             raise Exception("Error while storing the quiz data.")
 

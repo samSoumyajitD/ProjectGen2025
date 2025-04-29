@@ -98,7 +98,7 @@ Requirements:
 - Generate {num_questions} questions.
 - Each question should be relevant to the listed topics and support one or more of the learning goals.
 - Format each question as a multiple choice question with **4 options**.
-- Provide the correct answer separately. Indicate it by the option letter (a,b,c, or d).
+- Provide the correct answers to all questions separately in an array. Indicate it by the option letter (a,b,c, or d).
 - Ensure the correct answer is one of the 4 options.
 - Questions should vary in difficulty (easy, medium, hard).
 
@@ -112,16 +112,19 @@ Output JSON format:
   {{
     "question": "<question text>",
     "options": {{"a":"<option1>", "b":"<option2>", "c":"<option3>", "d":"<option4>"}},
-    "correct_answer": "<correct_option (a,b,c or d)>"
   }},
-  ...
+  ... <all other questions>,
+  {{
+   "correct_answers": ["a", "a", "b", "c", ...] <an array of all correct answers to the questions>
+  }}
 ]
+```
 
 **ALWAYS return a valid JSON wrapped in triple backticks — no explanations, no markdown, just the array of question objects.**
 
 ---
 
-### Example Output:
+### Example Output (for 2 questions):
 ```json
 [
   {{
@@ -131,8 +134,19 @@ Output JSON format:
       "b":"When n equals 0",
       "c":"When n is negative", 
       "d":"When n is fraction"
-    }},
-    "correct_answer": "b"
+    }}
+  }}, 
+  {{
+    "question": "What is the time complexity of merge sort ? ", 
+    "options":{{
+      "a":"O(n^2)", 
+      "b":"O(n)",
+      "c":"O(nlogn)", 
+      "d":"O(1)"
+    }}
+  }},
+  {{
+    "correct_answers":["b","c"]
   }}
 ]
 ```
