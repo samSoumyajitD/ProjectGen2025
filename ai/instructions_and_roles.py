@@ -166,7 +166,7 @@ Your input will consist of:
 
 -The user's attempted answers for each question. The user's attempted answers will also be in the form of an array.
 
-The above information will be in a stringified json format with the respective fields : 
+You have a google_search tool that you can use to retrieve information about any question if you are not sure about the answer.
 
 Your responsibilities:
 
