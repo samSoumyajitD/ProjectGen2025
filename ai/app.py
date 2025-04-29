@@ -11,7 +11,7 @@ from langchain.chains.combine_documents.stuff import create_stuff_documents_chai
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers.string import StrOutputParser
 from agent import get_agent_instance
-from instructions_and_roles import role_quiz, instructions_quiz, role_structuring, role_text_info, instruction_text_info, instruction_structuring
+from instructions_and_roles import role_evaluator, instructions_evaluator, role_quiz, instructions_quiz, role_structuring, role_text_info, instruction_text_info, instruction_structuring
 from utils.yt_script import get_video_list
 import json
 import traceback
@@ -237,7 +237,21 @@ def get_quiz(quiz_id:str):
     
 @app.route('/eval/<quiz_id>', methods=['POST'])
 def evaluate(quiz_id:str):
-    pass
+    try:
+        data = request.get_json()
+        user_answers = data.get("user_answers")
+        quiz_doc = quiz_collection.find_one({"_id":ObjectId(quiz_id)})
+        attempt_object = {"quiz":quiz_doc["quiz"], "correct_answers":quiz_doc["correct_answers"], "user_answers":user_answers}
+
+        evaluator = get_agent_instance(role=role_evaluator , instructions = instructions_evaluator)
+
+        response = evaluator.run(str(attempt_object))
+        parsed_response = parse_json_response(response.content)
+
+        return jsonify({"evaluation":parsed_response}), 200
+    except Exception as err:
+        print("Error at evaluation endpoint : ", err)
+        return jsonify({"error":"Something went wrong :("}), 500
 
 if __name__ == '__main__':
     # app.run(debug=True)
