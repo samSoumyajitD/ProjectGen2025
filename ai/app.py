@@ -229,6 +229,7 @@ def get_quiz(quiz_id:str):
 
         return jsonify({
             "quiz":quiz_entry["quiz"], 
+            "week":quiz_entry["week"],
         }), 200
     except Exception as err:
         print("err: ",err)
