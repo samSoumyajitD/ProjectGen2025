@@ -234,6 +234,10 @@ def get_quiz(quiz_id:str):
     except Exception as err:
         print("err: ",err)
         return jsonify({"error":"Something went wrong :("}),500
+    
+@app.route('/eval/<quiz_id>', methods=['POST'])
+def evaluate(quiz_id:str):
+    pass
 
 if __name__ == '__main__':
     # app.run(debug=True)
