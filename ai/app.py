@@ -248,7 +248,7 @@ def evaluate(quiz_id:str):
         response = evaluator.run(str(attempt_object))
         parsed_response = parse_json_response(response.content)
 
-        return jsonify({"evaluation":parsed_response}), 200
+        return jsonify({"evaluation":parsed_response, "week":quiz_doc["week"]}), 200
     except Exception as err:
         print("Error at evaluation endpoint : ", err)
         return jsonify({"error":"Something went wrong :("}), 500
