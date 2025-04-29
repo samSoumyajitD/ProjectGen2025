@@ -1,11 +1,13 @@
 'use client';
 
 import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import axios from "axios";
 import YouTube from 'react-youtube';
 import { ChevronDown, ChevronUp } from "lucide-react";
+import Link from "next/link";
+
 
 const GoalPage = () => {
   const params = useParams();
@@ -112,9 +114,9 @@ const GoalPage = () => {
 
       // Mark quiz as generated and store quiz ID if needed
       setQuizGenerated(true);
-      setQuizId(response.data.quiz?._id || null);
+      setQuizId(response.data.quizId|| null);
       
-      console.log("Quiz generated successfully:", response.data);
+      // console.log("Quiz generated successfully:", response.data);
     } catch (err: any) {
       console.error("Error generating quiz:", err);
       setError(err.response?.data?.error || "Failed to generate quiz");
@@ -122,24 +124,13 @@ const GoalPage = () => {
       setIsGeneratingQuiz(false);
     }
   };
-
+  const router = useRouter();
+ 
   const handleAttemptQuiz = () => {
     if (quizId) {
-      // Open a new window with the quiz attempt page
-      const quizWindow = window.open(`/quiz/${quizId}`, '_blank', 'width=1000,height=700');
-      
-      // Focus the new window if it was successfully opened
-      if (quizWindow) {
-        quizWindow.focus();
-      } else {
-        // Handle case where popup was blocked
-        alert('Popup was blocked. Please allow popups for this site to take the quiz.');
-        // Alternatively, you could navigate in the same window:
-        // router.push(`/quiz/${quizId}`);
-      }
-    } else {
-      console.error("No quiz ID available");
+      router.push(`/studentWelcome/academic/goals/${goalId}/givequiz/${quizId}`);
     }
+   
   };
 
   if (error) {
@@ -356,13 +347,27 @@ const GoalPage = () => {
             
             {/* Show Generate Quiz or Attempt button based on quiz generation status */}
             {!isGeneratingQuiz && (
-              <button
-                onClick={quizGenerated ? handleAttemptQuiz : generateQuiz}
-                className="bg-white text-blue-700 font-bold text-lg py-3 px-6 rounded-full hover:bg-gray-100 transition transform hover:scale-105 shadow-md"
-              >
-                {quizGenerated ? "Attempt Quiz" : "Generate Quiz"}
-              </button>
-            )}
+  quizGenerated && quizId ? (
+    <button
+    onClick={() => {
+      if (quizId) {
+        window.open(`/studentWelcome/academic/goals/${goalId}/givequiz/${quizId}`, "_blank");
+      }
+    }}
+    className="inline-block bg-white text-blue-700 font-bold text-lg py-3 px-6 rounded-full hover:bg-gray-100 transition transform hover:scale-105 shadow-md"
+  >
+    Attempt Quiz
+  </button>
+  ) : (
+    <button
+      onClick={generateQuiz}
+      className="bg-white text-blue-700 font-bold text-lg py-3 px-6 rounded-full hover:bg-gray-100 transition transform hover:scale-105 shadow-md"
+    >
+      Generate Quiz
+    </button>
+  )
+)}
+
             
             {!isGeneratingQuiz && !quizGenerated && (
               <p className="mt-6 text-white opacity-80 text-sm">
