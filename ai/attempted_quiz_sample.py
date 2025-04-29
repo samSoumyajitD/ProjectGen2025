@@ -1,4 +1,4 @@
-sample_quiz = {
+attempted_sample_quiz = {
     "quiz": [
         {
             "options": {
@@ -45,7 +45,7 @@ sample_quiz = {
             },
             "question": "In C++, what is the purpose of the 'new' keyword?"
         }
-    ], 
-    "correct_ans":["c", "a", "b", "c", "b"], 
-    
+    ],
+    "correct_ans":["c", "a", "b", "c", "b"],
+    "user_ans":["c", "b", "b", "a", "c"]
 }
