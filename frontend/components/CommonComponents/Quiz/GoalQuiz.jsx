@@ -19,66 +19,96 @@ import DynamicInput from "./input/DynamicInput";
 import ProgressBar from "./ProgressBar";
 import { useTheme } from "../../../context/ThemeProvider";
 import axios from "axios";
-import Cookies from "js-cookie"; // Import js-cookie
-import { useRouter } from "next/navigation"; // Import useRouter for redirection
+import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
+import { Moon, Sun, Home } from "lucide-react";
 
 const questions = [
-    {
-      type: "text",
-      question: "What is your learning goal?",
-      key: "goal",
-      required: true,
-    },
-    {
-      type: "mcq",
-      question: "How much time can you dedicate to learning per week?",
-      key: "time_per_week",
-      options: ["<5 hrs", "5-10 hrs", "10-20 hrs", "20+ hrs"],
-      required: true,
-    },
-    {
-      type: "mcq",
-      question: "What is your preferred learning mode?",
-      key: "learning_mode",
-      options: ["Self-paced", "Instructor-led", "Group learning", "Hybrid"],
-      required: true,
-    },
-    {
-      type: "mcq",
-      question: "What is your current skill level in this area?",
-      key: "skill_level",
-      options: ["Beginner", "Intermediate", "Advanced"],
-      required: true,
-    },
-    {
-      type: "text",
-      question: "Do you have a specific deadline for achieving your goal? (in months)",
-      key: "deadline",
-      required: true,
-    },
-  ];
-import { Moon, Sun, Home } from "lucide-react"; // Icons
+  {
+    type: "text",
+    question: "What is your learning goal?",
+    key: "goal",
+    required: true,
+  },
+  {
+    type: "mcq",
+    question: "How much time can you dedicate to learning per week?",
+    key: "time_per_week",
+    options: ["<5 hrs", "5-10 hrs", "10-20 hrs", "20+ hrs"],
+    required: true,
+  },
+  {
+    type: "mcq",
+    question: "What is your preferred learning mode?",
+    key: "learning_mode",
+    options: ["Self-paced", "Instructor-led", "Group learning", "Hybrid"],
+    required: true,
+  },
+  {
+    type: "mcq",
+    question: "What is your current skill level in this area?",
+    key: "skill_level",
+    options: ["Beginner", "Intermediate", "Advanced"],
+    required: true,
+  },
+  {
+    type: "text",
+    question: "Do you have a specific deadline for achieving your goal? (in weeks)",
+    key: "deadline",
+    required: true,
+  },
+];
 
 export default function GoalQuiz() {
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState({});
   const [open, setOpen] = useState(false);
-  const [user, setUser] = useState(null); // State to store user profile data
-  const { darkMode, toggleDarkMode } = useTheme(); // State to manage theme
+  const [user, setUser] = useState(null);
+  const { darkMode, toggleDarkMode } = useTheme();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isGeneratingRoadmap, setIsGeneratingRoadmap] = useState(false);
   const [error, setError] = useState(null);
   const [userId, setUserId] = useState(null);
-  const router = useRouter(); // Initialize useRouter
+  const [loadingMessages, setLoadingMessages] = useState([]);
+  const router = useRouter();
 
-  // Fetch user profile data
+  const coolMessages = [
+    "Analyzing your learning patterns...",
+    "Optimizing your study schedule...",
+    "Curating the best resources for you...",
+    "Building your personalized roadmap...",
+    "Almost there! Just a few more seconds...",
+    "Your AI-powered learning journey is being crafted..."
+  ];
+
   useEffect(() => {
     const userCookie = Cookies.get("user");
     if (userCookie) {
       const user = JSON.parse(userCookie);
-      setUserId(user.id); // Set the user ID from the cookie
-      setFormData((prev) => ({ ...prev, userId: user.id })); // Add userId to formData
+      setUserId(user.id);
+      setFormData((prev) => ({ ...prev, userId: user.id }));
     }
   }, []);
+
+  useEffect(() => {
+    if (isGeneratingRoadmap) {
+      const interval = setInterval(() => {
+        setLoadingMessages(prev => {
+          // Get a random message that's not already shown
+          const availableMessages = coolMessages.filter(msg => !prev.includes(msg));
+          if (availableMessages.length === 0) return prev;
+          
+          const randomIndex = Math.floor(Math.random() * availableMessages.length);
+          const newMessage = availableMessages[randomIndex];
+          
+          // Keep only the last 2-3 messages to avoid clutter
+          return [...prev.slice(-2), newMessage];
+        });
+      }, 3000);
+
+      return () => clearInterval(interval);
+    }
+  }, [isGeneratingRoadmap]);
 
   const handleInputChange = (key, value) => {
     setFormData((prev) => ({ ...prev, [key]: value }));
@@ -97,22 +127,25 @@ export default function GoalQuiz() {
       setError(null);
       try {
         const response = await axios.post(
-          `http://localhost:5000/api/goals/createOrUpdate`,
-          { ...formData, userId }, // Include userId in the request body
+          `http://localhost:5000/api/goals/createGoale`,
+          { ...formData, userId },
           { withCredentials: true }
         );
 
-const roadmapresponse = await axios.post(
-  `http://127.0.0.1:5000/generate-roadmap/${userId}/${response.data.goal._id}`,
-  { userId, goalId: response.data.goal._id }, // Include userId and goalId in the request body
-  { withCredentials: true },
+        // Start showing loading messages
+        setIsGeneratingRoadmap(true);
+        setLoadingMessages([coolMessages[0]]);
 
+        // Generate roadmap
+        const roadmapresponse = await axios.get(
+          `http://127.0.0.1:5000/generate-roadmap/${userId}/${response.data.goal._id}`,
+          { userId, goalId: response.data.goal._id },
+          { withCredentials: true }
+        );
 
-)
-
-        alert("Goal set successfully!");
-
-  
+        // Stop loading and redirect
+        setIsGeneratingRoadmap(false);
+        
         // Redirect based on user role
         const userRole = Cookies.get("role");
         if (userRole === "Student") {
@@ -121,10 +154,10 @@ const roadmapresponse = await axios.post(
           router.push("/workingProWelcome");
         }
       } catch (error) {
+        setIsGeneratingRoadmap(false);
         setError(error.response?.data?.message || 'Error setting goal');
         console.log(error);
         alert(error.response?.data?.message || 'Error setting goal');
-
       } finally {
         setIsSubmitting(false);
       }
@@ -181,78 +214,100 @@ const roadmapresponse = await axios.post(
 
   return (
     <div className={cn(
-        "rounded-lg flex flex-col md:flex-row bg-gray-50 dark:bg-neutral-900 w-full flex-1 max-w-7xl mx-auto border border-neutral-300 dark:border-neutral-700 shadow-lg",
-        "h-[100vh] overflow-hidden"
-      )}>
-        <Sidebar open={open} setOpen={setOpen} className="bg-white dark:bg-neutral-800 shadow-md">
-          <SidebarBody className="justify-between gap-6">
-            <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
-              {open ? <Logo /> : <LogoIcon />}
-              <div className="mt-6 flex flex-col gap-3">
-                {questions.map((question, idx) => (
-                  <SidebarLink
-                    key={idx}
-                    link={{
-                      label: question.question,
-                      href: "#",
-                      icon: <div className="h-5 w-5 flex-shrink-0" />,
-                    }}
-                    onClick={() => setCurrentStep(idx)}
-                    className={cn(
-                      "px-4 py-2 rounded-lg transition-all text-sm font-medium",
-                      currentStep === idx 
-                        ? "bg-blue-600 text-white shadow-md"
-                        : "text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-neutral-700"
-                    )}
-                  />
-                ))}
-                {links.map((link, idx) => (
-                  <SidebarLink key={idx} link={link} />
-                ))}
+      "rounded-lg flex flex-col md:flex-row bg-gray-50 dark:bg-neutral-900 w-full flex-1 max-w-7xl mx-auto border border-neutral-300 dark:border-neutral-700 shadow-lg",
+      "h-[100vh] overflow-hidden"
+    )}>
+      <Sidebar open={open} setOpen={setOpen} className="bg-white dark:bg-neutral-800 shadow-md">
+        <SidebarBody className="justify-between gap-6">
+          <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
+            {open ? <Logo /> : <LogoIcon />}
+            <div className="mt-6 flex flex-col gap-3">
+              {questions.map((question, idx) => (
                 <SidebarLink
+                  key={idx}
                   link={{
-                    label: darkMode ? "Light Mode" : "Dark Mode",
+                    label: question.question,
                     href: "#",
-                    icon: darkMode ? (
-                      <Sun className="w-6 h-6 text-yellow-400" />
-                    ) : (
-                      <Moon className="w-6 h-6 text-gray-800 dark:text-gray-300" />
-                    ),
+                    icon: <div className="h-5 w-5 flex-shrink-0" />,
                   }}
-                  onClick={toggleDarkMode}
-                  className="hover:bg-gray-200 dark:hover:bg-neutral-700 p-2 rounded-lg"
+                  onClick={() => setCurrentStep(idx)}
+                  className={cn(
+                    "px-4 py-2 rounded-lg transition-all text-sm font-medium",
+                    currentStep === idx 
+                      ? "bg-blue-600 text-white shadow-md"
+                      : "text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-neutral-700"
+                  )}
                 />
-              </div>
-            </div>
-            <div className="p-4 border-t dark:border-neutral-600">
+              ))}
+              {links.map((link, idx) => (
+                <SidebarLink key={idx} link={link} />
+              ))}
               <SidebarLink
                 link={{
-                  label: user ? user.name : "User",
+                  label: darkMode ? "Light Mode" : "Dark Mode",
                   href: "#",
-                  icon: (
-                    <Avatar
-                      isBordered
-                      as="button"
-                      className="transition-transform text-[20px] font-[500]"
-                      color="primary"
-                      name={user ? user.name[0] : "U"} 
-                      size="sm"
-                    />
+                  icon: darkMode ? (
+                    <Sun className="w-6 h-6 text-yellow-400" />
+                  ) : (
+                    <Moon className="w-6 h-6 text-gray-800 dark:text-gray-300" />
                   ),
                 }}
+                onClick={toggleDarkMode}
                 className="hover:bg-gray-200 dark:hover:bg-neutral-700 p-2 rounded-lg"
               />
             </div>
-          </SidebarBody>
-        </Sidebar>
-      
-        <div className="flex flex-1 flex-col">
-          <h1 className="text-3xl font-bold text-center m-6 text-neutral-800 dark:text-neutral-100">
-            Saarthi AI Interactive Goal setting
-          </h1>
+          </div>
+          <div className="p-4 border-t dark:border-neutral-600">
+            <SidebarLink
+              link={{
+                label: user ? user.name : "User",
+                href: "#",
+                icon: (
+                  <Avatar
+                    isBordered
+                    as="button"
+                    className="transition-transform text-[20px] font-[500]"
+                    color="primary"
+                    name={user ? user.name[0] : "U"} 
+                    size="sm"
+                  />
+                ),
+              }}
+              className="hover:bg-gray-200 dark:hover:bg-neutral-700 p-2 rounded-lg"
+            />
+          </div>
+        </SidebarBody>
+      </Sidebar>
+    
+      <div className="flex flex-1 flex-col">
+        <h1 className="text-3xl font-bold text-center m-6 text-neutral-800 dark:text-neutral-100">
+          Saarthi AI Interactive Goal setting
+        </h1>
 
-          <div className="p-4 md:p-8 rounded-tl-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 flex flex-col gap-4 flex-1 w-full h-full shadow-md">
-            <ProgressBar current={currentStep + 1} total={questions.length} className="mb-4" />
+        <div className="p-4 md:p-8 rounded-tl-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 flex flex-col gap-4 flex-1 w-full h-full shadow-md">
+          <ProgressBar current={currentStep + 1} total={questions.length} className="mb-4" />
+          
+          {isGeneratingRoadmap ? (
+            <div className="flex flex-col items-center justify-center h-full">
+              <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500 mb-6"></div>
+              <h2 className="text-xl font-semibold mb-4 text-center text-blue-600 dark:text-blue-400">
+                Crafting Your Personalized Learning Roadmap
+              </h2>
+              <div className="space-y-2 text-center">
+                {loadingMessages.map((message, index) => (
+                  <motion.p 
+                    key={index}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="text-gray-700 dark:text-gray-300"
+                  >
+                    {message}
+                  </motion.p>
+                ))}
+              </div>
+            </div>
+          ) : (
             <AnimatePresence mode="wait">
               <motion.div
                 key={currentStep}
@@ -265,7 +320,9 @@ const roadmapresponse = await axios.post(
                 {renderQuestion()}
               </motion.div>
             </AnimatePresence>
+          )}
 
+          {!isGeneratingRoadmap && (
             <div className="mt-6 flex justify-between">
               <motion.button
                 onClick={handlePrevious}
@@ -278,16 +335,20 @@ const roadmapresponse = await axios.post(
               </motion.button>
               <motion.button
                 onClick={handleNext}
-                className="px-4 py-2 bg-blue-600 dark:text-white rounded-lg shadow-md hover:bg-blue-700 transition-all"
+                disabled={isSubmitting}
+                className="px-4 py-2 bg-blue-600 dark:text-white rounded-lg shadow-md hover:bg-blue-700 transition-all disabled:opacity-70"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                {currentStep === questions.length - 1 ? "Build" : "Next"}
+                {currentStep === questions.length - 1 
+                  ? isSubmitting ? "Processing..." : "Build" 
+                  : "Next"}
               </motion.button>
             </div>
-          </div>
+          )}
         </div>
       </div>
+    </div>
   );
 }
 

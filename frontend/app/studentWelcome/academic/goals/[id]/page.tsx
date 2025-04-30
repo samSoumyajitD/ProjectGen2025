@@ -7,12 +7,12 @@ import axios from "axios";
 import YouTube from 'react-youtube';
 import { ChevronDown, ChevronUp } from "lucide-react";
 import Link from "next/link";
-
-
+import CustomChatbot from "../../../../../components/Chatbot/Chatbot";
+import { IoChatbubbleEllipsesOutline } from "react-icons/io5";
 const GoalPage = () => {
   const params = useParams();
   const goalId = params.id as string;
-
+ const [opened, setOpened] = useState(false);
   const [roadmap, setRoadmap] = useState<any[]>([]);
   const [error, setError] = useState<string>("");
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
@@ -157,7 +157,29 @@ const GoalPage = () => {
       <h1 className="text-3xl font-bold text-gray-800 mb-6 text-center">
         🚀 Your Learning Roadmap
       </h1>
+      <div className="fixed bottom-5 right-5 z-50">
+        {!opened && (
+          <button
+            className="p-4 bg-blue-600 text-white rounded-full shadow-lg hover:bg-blue-700 focus:outline-none"
+            onClick={() => setOpened(true)}
+          >
+            <IoChatbubbleEllipsesOutline size={30} />
+          </button>
+        )}
+      </div>
 
+      {/* Chatbot Component */}
+      {opened && (
+        <div className="fixed bottom-16 right-5 w-80 h-[500px] bg-white dark:bg-gray-800 shadow-lg rounded-lg p-4">
+          <CustomChatbot opened={opened} setOpened={setOpened} headerTitle="AI Professor" initialMessage="Welcome! I'm your AI Professor, here to guide you through your learning journey. What can I help you with today?" />
+          <button
+            className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 dark:text-gray-300 dark:hover:text-white"
+            onClick={() => setOpened(false)}
+          >
+            ✖
+          </button>
+        </div>
+      )}
       {roadmap.length === 0 ? (
         <div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4">
           <p>No roadmap data available for this goal.</p>

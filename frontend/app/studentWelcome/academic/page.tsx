@@ -36,7 +36,7 @@ const AcademicPage: React.FC = () => {
       
 
       {/* Card Grid */}
-      <div className="grid gap-6 md:grid-cols-2" >
+      <div className="flex justify-center gap-0 md:gap-20 flex-wrap">
         <AnimatedPinDemo
           title="Personalized Roadmaps"
           href="/studentWelcome/academic/roadmap"
@@ -45,14 +45,7 @@ const AcademicPage: React.FC = () => {
           bg_css="bg-gradient-to-br from-orange-500 via-pink-500 to-purple-500"
         />
 
-        <AnimatedPinDemo
-          title="AI Tutor"
-          href="/studentWelcome/academic/aiprof"
-          h3="Your 24/7 Smart Learning Companion"
-          subhead="Personalized, AI-driven tutoring to boost your success."
-          bg_css="bg-gradient-to-br from-blue-400 via-indigo-500 to-blue-700"
-        />
-
+     
         
       </div>
       </div>

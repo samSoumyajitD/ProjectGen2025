@@ -13,20 +13,7 @@ const AcademicPage: React.FC = () => {
   return (
     <div className="bg-gradient-to-b from-white to-white dark:from-black dark:to-gray-900 min-h-screen flex flex-col">
       <StuNavBar />
-      <div className="mt-[50px] flex-grow">
-        <CoverAcProf content="Professor" />
-
-        {/* AI-Powered Learning Assistance */}
-        <div className="container mx-auto p-6 text-center">
-          <h2 className="text-xl font-semibold mb-3 text-gray-800 dark:text-white">
-            Your AI Professor for Academic Growth
-          </h2>
-          <p className="text-gray-600 dark:text-gray-300">
-            Get instant academic support through our AI-powered chatbot.
-          </p>
-        </div>
-      </div>
-
+      
       <div className="fixed bottom-5 right-5 z-50">
         {!opened && (
           <button
