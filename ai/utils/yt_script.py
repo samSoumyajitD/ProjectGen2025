@@ -2,7 +2,7 @@ import os
 from dotenv import load_dotenv
 from googleapiclient.discovery import build
 load_dotenv()
-api_key = os.getenv("YOUTUBE_API_KEY_4")
+api_key = os.getenv("YOUTUBE_API_KEY_3")
 
 def yt_api_search(youtube, video_topic):
     request = youtube.search().list(

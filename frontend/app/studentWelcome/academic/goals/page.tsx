@@ -98,18 +98,10 @@ const GoalsPage = () => {
           {goals.map((goal) => (
             <div key={goal._id} className="relative bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 mb-4">
               <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-200">{goal.goal}</h2>
-              <p className="text-gray-600 dark:text-gray-400">Deadline: {goal.deadline} months</p>
+              
 
-              <div className="w-full bg-gray-300 dark:bg-gray-700 rounded-full h-4 mt-3">
-                <div
-                  className="bg-blue-500 h-4 rounded-full transition-all"
-                  style={{ width: `${goal.progress}%` }}
-                />
-              </div>
-
-              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                Progress: {goal.progress}%
-              </p>
+       
+             
 
               <Link href={`/studentWelcome/academic/goals/${goal._id}`}>
                 <motion.button
