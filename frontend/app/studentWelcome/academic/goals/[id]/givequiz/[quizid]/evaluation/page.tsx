@@ -1,8 +1,8 @@
 "use client";
-// app/studentWelcome/academic/goals/[id]/givequiz/[quizid]/evaluation/page.tsx
 import { useParams } from 'next/navigation';
+import React from 'react';
 
-export default function EvaluationPage() {
+const EvaluationPage = () => {
   const params = useParams();
   const { id, quizid } = params as { id: string; quizid: string };
 
@@ -22,4 +22,6 @@ export default function EvaluationPage() {
       </div>
     </div>
   );
-}
+};
+
+export default EvaluationPage;
