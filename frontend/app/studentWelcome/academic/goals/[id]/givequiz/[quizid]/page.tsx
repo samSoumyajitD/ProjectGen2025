@@ -258,45 +258,89 @@ const GiveQuizPage = () => {
 
 
   // Quiz Completed State (after successful submission)
-  if (quizCompleted) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
-        <motion.div
-          initial={{ scale: 0.9, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          className="bg-white rounded-3xl shadow-lg p-8 w-full max-w-md text-center"
-        >
-          <div className="flex items-center justify-center text-green-500 mb-6">
-            <CheckCircle size={60} />
-          </div>
-          <h1 className="text-2xl font-bold mb-2">Quiz Completed!</h1>
-          <p className="text-gray-600 mb-8">You've successfully completed the Week {week} quiz.</p>
-
-          {/* Display evaluation result if available */}
-          {evaluationResult && (
-              <div className="mt-6 p-4 bg-gray-100 rounded-lg text-left max-h-60 overflow-y-auto mb-6">
-                  <h2 className="text-lg font-semibold mb-2">Your Evaluation:</h2>
-                  {/* Render evaluationResult here. Adjust based on its actual structure. */}
-                  {/* For example, if evaluationResult is a string: */}
-                  <p className="text-gray-700 whitespace-pre-wrap">{JSON.stringify(evaluationResult, null, 2)}</p>
-                  {/* If it's an object with specific keys, map through it */}
-              </div>
-          )}
-
-          <button
-            onClick={() => {
-                // Navigate back or to a specific results page if you have one
-                window.history.back();
-            }}
-            className="px-8 py-3 rounded-full bg-blue-500 text-white font-medium transition hover:bg-blue-600 active:bg-blue-700"
+ // Quiz Completed State (after successful submission)
+if (quizCompleted) {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-50 p-4">
+      <motion.div
+        initial={{ scale: 0.95, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ type: 'spring', damping: 20 }}
+        className="bg-white rounded-3xl shadow-xl p-8 w-full max-w-md text-center relative overflow-hidden"
+      >
+        {/* Decorative elements */}
+        <div className="absolute -top-20 -right-20 w-40 h-40 bg-blue-100 rounded-full opacity-30"></div>
+        <div className="absolute -bottom-16 -left-16 w-32 h-32 bg-indigo-100 rounded-full opacity-30"></div>
+        
+        <div className="relative z-10">
+          {/* Animated checkmark */}
+          <motion.div 
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ type: 'spring', stiffness: 200 }}
+            className="flex items-center justify-center text-green-500 mb-6 mx-auto w-20 h-20"
           >
-            Return
-          </button>
-        </motion.div>
-      </div>
-    );
-  }
+            <CheckCircle size={80} strokeWidth={1.5} />
+          </motion.div>
 
+          <motion.h1 
+            initial={{ y: 10, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.2 }}
+            className="text-3xl font-bold mb-3 bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent"
+          >
+            Great Job!
+          </motion.h1>
+
+          <motion.p 
+            initial={{ y: 10, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.3 }}
+            className="text-gray-600 mb-6 text-lg"
+          >
+            You've successfully completed the Week {week} quiz!
+          </motion.p>
+
+          <motion.p 
+            initial={{ y: 10, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.4 }}
+            className="text-gray-700 mb-8 px-4 italic"
+          >
+            "Every attempt brings you one step closer to mastery. Keep up the great work!"
+          </motion.p>
+
+          
+
+          <motion.div
+            initial={{ y: 10, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.6 }}
+          >
+            <button
+              onClick={() => {
+                // Navigate to evaluation page
+                window.location.href = `/studentWelcome/academic/goals/${goalId}/givequiz/${quizId}/evaluation`;
+              }}
+              className="px-8 py-3 rounded-full bg-gradient-to-r from-blue-500 to-indigo-500 text-white font-medium transition-all hover:from-blue-600 hover:to-indigo-600 active:scale-95 shadow-md hover:shadow-lg w-full"
+            >
+              View Detailed Evaluation
+            </button>
+          </motion.div>
+
+          <motion.div
+            initial={{ y: 10, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.7 }}
+            className="mt-4"
+          >
+        
+          </motion.div>
+        </div>
+      </motion.div>
+    </div>
+  );
+}
 
   // Pre-quiz / Fullscreen prompt state
   if (!isFullscreen) {
