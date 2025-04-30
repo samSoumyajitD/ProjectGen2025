@@ -19,13 +19,13 @@ def get_agent_instance(role:str, instructions:str):
             )
 
 if __name__ == "__main__": 
-    # personalized_prompt_1 = """
-    #     - Learning Goal: Model Context Protocl
-    #     - Time Commitment: 7 hrs per week
-    #     - Preferred Learning Mode: Tutorials and Videos
-    #     - Current Skill Level: Intermediate
-    #     - Deadline: 12 weeks
-    # """
+    personalized_prompt_1 = """
+        - Learning Goal: Natural Language Processing
+        - Time Commitment: 7 hrs per week
+        - Preferred Learning Mode: Tutorials and Videos
+        - Current Skill Level: Intermediate
+        - Deadline: within 4 weeks
+    """
     # topic_list = [
     #     "Basics of C++",
     #     "Pointers in C++",
@@ -54,5 +54,4 @@ if __name__ == "__main__":
     parsed_response = parse_json_response(response.content)
 
     print(parsed_response)
-
     pass

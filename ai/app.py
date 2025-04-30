@@ -37,7 +37,7 @@ db = client["test"]
 goals_collection = db["goals"]
 roadmap_collection = db["roadmaps"]
 quiz_collection = db["quiz"]
-
+eval_collection = db["eval"]
 
 
 @app.route('/generate-roadmap/<user_id>/<goal_id>', methods=['GET'])
@@ -235,8 +235,8 @@ def get_quiz(quiz_id:str):
         print("err: ",err)
         return jsonify({"error":"Something went wrong :("}),500
     
-@app.route('/eval/<quiz_id>', methods=['POST'])
-def evaluate(quiz_id:str):
+@app.route('/eval/<quiz_id>/<goal_id>', methods=['POST'])
+def evaluate(quiz_id:str, goal_id:str):
     try:
         data = request.get_json()
         user_answers = data.get("user_answers")
@@ -247,12 +247,28 @@ def evaluate(quiz_id:str):
 
         response = evaluator.run(str(attempt_object))
         parsed_response = parse_json_response(response.content)
-
+        eval_object = {"evaluation":parsed_response, "goalId":ObjectId(goal_id), "quizId":ObjectId(quiz_id)}
+        save_eval_to_mongo(eval_object)
         return jsonify({"evaluation":parsed_response, "week":quiz_doc["week"]}), 200
     except Exception as err:
         print("Error at evaluation endpoint : ", err)
         return jsonify({"error":"Something went wrong :("}), 500
+def save_eval_to_mongo(eval_object):
+    try:
+        existing_eval = eval_collection.find_one({"quizId":eval_object["quizId"]})
+        if existing_eval:
+            eval_collection.find_one_and_update({
+                "_id":existing_eval["_id"], 
+                "$set":eval_object
+            })
+        else:
+            eval_collection.insert_one(eval_object)
 
+        return True
+    except Exception as err:
+        print("Error at evaluation endpoint")
+        return False
+        # return jsonify({"error":"Something went wrong :("}), 500
 if __name__ == '__main__':
     # app.run(debug=True)
     # parser = StrOutputParser()
