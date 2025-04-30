@@ -1,21 +1,22 @@
 "use client";
-import React, { useState } from "react";
-import { motion } from "framer-motion";
+import React, { useState, CSSProperties } from "react";
 import { cn } from "../../utils/cn";
 import Link from "next/link";
 
-export const PinContainer = ({
-  children,
-  title,
-  href,
-  className,
-  containerClassName,
-}: {
+interface PinContainerProps {
   children: React.ReactNode;
   title?: string;
   href?: string;
   className?: string;
   containerClassName?: string;
+}
+
+export const PinContainer: React.FC<PinContainerProps> = ({
+  children,
+  title,
+  href,
+  className,
+  containerClassName,
 }) => {
   const [transform, setTransform] = useState(
     "translate(-50%,-50%) rotateX(0deg)"
@@ -54,9 +55,13 @@ export const PinContainer = ({
   );
 };
 
-export const PinPerspective = ({ title }: { title?: string }) => {
+interface PinPerspectiveProps {
+  title?: string;
+}
+
+export const PinPerspective: React.FC<PinPerspectiveProps> = ({ title }) => {
   return (
-    <motion.div className="pointer-events-none w-96 h-80 flex items-center justify-center opacity-0 group-hover/pin:opacity-100 z-[60] transition duration-500">
+    <div className="pointer-events-none w-96 h-80 flex items-center justify-center opacity-0 group-hover/pin:opacity-100 z-[60] transition duration-500">
       <div className="w-full h-full -mt-7 flex-none inset-0">
         <div className="absolute top-0 inset-x-0 flex justify-center">
           <div className="relative flex space-x-2 items-center z-10 rounded-full bg-zinc-950 py-0.5 px-4 ring-1 ring-white/10">
@@ -77,25 +82,34 @@ export const PinPerspective = ({ title }: { title?: string }) => {
         >
           <>
             {[0, 2, 4].map((delay) => (
-              <motion.div
+              <div
                 key={delay}
-                initial={{ opacity: 0, scale: 0, x: "-50%", y: "-50%" }}
-                animate={{ opacity: [0, 1, 0.5, 0], scale: 1, z: 0 }}
-                transition={{ duration: 6, repeat: Infinity, delay }}
-                className="absolute left-1/2 top-1/2 h-[11.25rem] w-[11.25rem] rounded-full bg-sky-500/[0.08] shadow-[0_8px_16px_rgb(0_0_0/0.4)]"
-              ></motion.div>
+                className="absolute left-1/2 top-1/2 h-[11.25rem] w-[11.25rem] rounded-full bg-sky-500/[0.08] shadow-[0_8px_16px_rgb(0_0_0/0.4)] opacity-0 -translate-x-1/2 -translate-y-1/2 animate-pulse-ring"
+                style={{ 
+                  animationDelay: `${delay}s`,
+                  animationDuration: '6s'
+                } as CSSProperties}
+              ></div>
             ))}
           </>
         </div>
 
         {/* Light beam */}
         <>
-          <motion.div className="absolute right-1/2 bottom-1/2 bg-gradient-to-b from-transparent to-cyan-500 translate-y-[14px] w-px h-20 group-hover/pin:h-40 blur-[2px]" />
-          <motion.div className="absolute right-1/2 bottom-1/2 bg-gradient-to-b from-transparent to-cyan-500 translate-y-[14px] w-px h-20 group-hover/pin:h-40" />
-          <motion.div className="absolute right-1/2 translate-x-[1.5px] bottom-1/2 bg-cyan-600 translate-y-[14px] w-[4px] h-[4px] rounded-full z-40 blur-[3px]" />
-          <motion.div className="absolute right-1/2 translate-x-[0.5px] bottom-1/2 bg-cyan-300 translate-y-[14px] w-[2px] h-[2px] rounded-full z-40" />
+          <div className="absolute right-1/2 bottom-1/2 bg-gradient-to-b from-transparent to-cyan-500 translate-y-[14px] w-px h-20 group-hover/pin:h-40 blur-[2px]" />
+          <div className="absolute right-1/2 bottom-1/2 bg-gradient-to-b from-transparent to-cyan-500 translate-y-[14px] w-px h-20 group-hover/pin:h-40" />
+          <div className="absolute right-1/2 translate-x-[1.5px] bottom-1/2 bg-cyan-600 translate-y-[14px] w-[4px] h-[4px] rounded-full z-40 blur-[3px]" />
+          <div className="absolute right-1/2 translate-x-[0.5px] bottom-1/2 bg-cyan-300 translate-y-[14px] w-[2px] h-[2px] rounded-full z-40" />
         </>
       </div>
-    </motion.div>
+    </div>
   );
 };
+
+// You'll need to add this animation to your global CSS file or tailwind.config.js
+// @keyframes pulse-ring {
+//   0% { opacity: 0; transform: translate(-50%, -50%) scale(0); }
+//   25% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+//   50% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
+//   100% { opacity: 0; transform: translate(-50%, -50%) scale(1); }
+// }
