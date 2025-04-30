@@ -38,7 +38,7 @@ app.post('/api/chat', async (req, res) => {
     const { message } = req.body;
   
     try {
-      const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
+      const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
       const prompt = `Act as an AI Tutor for students. Answer this: ${message}`;
       
       const result = await model.generateContent(prompt);
