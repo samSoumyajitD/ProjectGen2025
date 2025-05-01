@@ -247,7 +247,7 @@ def evaluate(quiz_id:str, goal_id:str):
 
         response = evaluator.run(str(attempt_object))
         parsed_response = parse_json_response(response.content)
-        eval_object = {"evaluation":parsed_response, "goalId":ObjectId(goal_id), "quizId":ObjectId(quiz_id)}
+        eval_object = {"evaluation":parsed_response, "goalId":ObjectId(goal_id), "quizId":ObjectId(quiz_id), "week":quiz_doc["week"]}
         save_eval_to_mongo(eval_object)
         return jsonify({"evaluation":parsed_response, "week":quiz_doc["week"]}), 200
     except Exception as err:
@@ -257,18 +257,72 @@ def save_eval_to_mongo(eval_object):
     try:
         existing_eval = eval_collection.find_one({"quizId":eval_object["quizId"]})
         if existing_eval:
-            eval_collection.find_one_and_update({
-                "_id":existing_eval["_id"], 
-                "$set":eval_object
-            })
+            eval_collection.find_one_and_update(
+                {"_id":existing_eval["_id"]}, 
+                {"$set":eval_object})
         else:
             eval_collection.insert_one(eval_object)
 
         return True
     except Exception as err:
-        print("Error at evaluation endpoint")
+        print("Error at evaluation endpoint :",err)
         return False
         # return jsonify({"error":"Something went wrong :("}), 500
+
+@app.route('/get-goal-name/<goal_id>', methods=["GET"])
+def get_goal_name(goal_id:str):
+    try:
+        goal_doc = goals_collection.find_one({"_id":ObjectId(goal_id)})
+        return jsonify({"goalName":goal_doc["goal"]}),200
+    except Exception as err:
+        print("Error at get-goal-name : ", err)
+        return jsonify({"error":"Something went wrong :("}),500
+
+@app.route('/get-attempted-quizzes/<goal_id>', methods=["GET"])
+def get_all_attempted_quizes(goal_id:str):
+    try:
+        quizzes = list(eval_collection.find({"goalId":ObjectId(goal_id)}))
+        # print(quizzes)
+        response=[]
+        for quiz in quizzes:
+
+            response.append({"week":quiz["week"], "quizId":str(quiz["quizId"]), "score":quiz["evaluation"][-1]["score"]})
+        # for quiz in quizzes:
+        print(response)
+        return jsonify({"quizzes":response}),200
+    except Exception as err:
+        print("Error at get-attempted-quizzes : ", err)
+        return jsonify({"error":"Something went wrong :("}),500
+@app.route("/get-eval/<quiz_id>", methods=["GET"])
+def get_eval(quiz_id:str):
+    try:
+        eval_doc = eval_collection.find_one({"quizId":ObjectId(quiz_id)})
+        print(eval_doc)
+        return jsonify({
+            "evaluation":eval_doc["evaluation"]
+        })
+    except Exception as err:
+        print("Error at get-eval : ", err)
+        return jsonify({"error":"Something went wrong :("}),500
+def score_threshold_pass(score:str):
+    threshold = 70
+    print(score)
+    percentage = 0
+    nums = score.split("/")
+    return ((int(nums[0])/int(nums[1]))*100) >= threshold
+        
+
+@app.route('/certificate/<goal_id>', methods=["GET"])
+def eligibility(goal_id:str):
+    try:
+        final_eval = eval_collection.find_one({"goalId":ObjectId(goal_id), "week":"final"})
+        print(final_eval)
+        if final_eval and score_threshold_pass(final_eval["evaluation"][-1]["score"]):
+            return jsonify({"verdict":"eligible"}),200
+        return jsonify({"verdict":"not eligible"}),200
+    except Exception as err:
+        print("Error testing eligibility: ",err)
+        pass   
 if __name__ == '__main__':
     # app.run(debug=True)
     # parser = StrOutputParser()

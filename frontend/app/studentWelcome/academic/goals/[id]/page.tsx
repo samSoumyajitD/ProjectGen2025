@@ -170,7 +170,7 @@ const GoalPage = () => {
 
       {/* Chatbot Component */}
       {opened && (
-        <div className="fixed bottom-16 right-5 w-80 h-[500px] bg-white dark:bg-gray-800 shadow-lg rounded-lg p-4">
+        <div >
           <CustomChatbot opened={opened} setOpened={setOpened} headerTitle="AI Professor" initialMessage="Welcome! I'm your AI Professor, here to guide you through your learning journey. What can I help you with today?" />
           <button
             className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 dark:text-gray-300 dark:hover:text-white"

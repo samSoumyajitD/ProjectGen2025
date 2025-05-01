@@ -320,7 +320,7 @@ if (quizCompleted) {
             <button
               onClick={() => {
                 // Navigate to evaluation page
-                window.location.href = `/studentWelcome/academic/goals/${goalId}/givequiz/${quizId}/evaluation`;
+                window.location.href = `/studentWelcome/academic/goals/${goalId}/givequiz/${quizId}`;
               }}
               className="px-8 py-3 rounded-full bg-gradient-to-r from-blue-500 to-indigo-500 text-white font-medium transition-all hover:from-blue-600 hover:to-indigo-600 active:scale-95 shadow-md hover:shadow-lg w-full"
             >
